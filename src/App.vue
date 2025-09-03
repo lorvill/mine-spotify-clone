@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 </script>
 
 <template>
@@ -8,25 +7,15 @@
       <component :is="Component" />
     </transition>
   </router-view>
-
-
-
-  <div
-    class="
-            fixed
-            right-0
-            top-0
-            w-[calc(100%-240px)]
-            overflow-auto
-            h-full
-            bg-gradient-to-b
-            from-[#1C1C1C]
-            to-black
-        "
-  >
-    <div class="mt-[70px]"></div>
-    <div class="mb-[100px]"></div>
-  </div>
-
 </template>
 
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
