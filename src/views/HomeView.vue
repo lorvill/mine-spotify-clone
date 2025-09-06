@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import SideBar from '@/components/SideBar.vue';
-import ContentArea from '@/components/ContentArea.vue';
+import TheSidebar from '@/components/TheSidebar.vue';
+import ContentHome from '@/components/ContentHome.vue';
 
 </script>
 
 <template>
 <div>
-  <SideBar />
-  <ContentArea />
+  <ContentHome />
 </div>
 
 </template>

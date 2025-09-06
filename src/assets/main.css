@@ -8,3 +8,12 @@ html, body {
 body {
     background: linear-gradient(to bottom, #1C1C1C, #000000);
 }
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

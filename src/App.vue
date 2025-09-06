@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import TheSidebar from '@/components/TheSidebar.vue'
 </script>
 
 <template>
+  <TheSidebar />
+
   <router-view v-slot="{ Component }">
     <transition name="fade" mode="out-in">
       <component :is="Component" />
