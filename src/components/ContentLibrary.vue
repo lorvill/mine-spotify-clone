@@ -1,41 +1,56 @@
 <script setup lang="ts">
 import { useAlbumsQuery } from '@/composables/useAlbumsQuery.ts'
+import { usePodcastsQuery } from '@/composables/usePodcastsQuery.ts'
+import { useRouteQuery } from '@/composables/useRouteQuery.ts'
 import LibraryCardList from '@/components/LibraryCardList.vue'
-import { ref } from 'vue'
+import Button from 'primevue/button'
+import { computed } from 'vue'
 
 const { data: albums, isLoading: isAlbumsLoading, error: albumsError } = useAlbumsQuery()
-const categories = ref(['All', 'Albums', 'Podcasts'])
+const { data: podcasts, isLoading: isPodcastsLoading, error: podcastsError } = usePodcastsQuery()
+const cards = computed(() => {
+  if (selectedCategory.value === undefined) {
+    return [...(albums?.value ?? []), ...(podcasts?.value ?? [])]
+  }
+  if (selectedCategory.value === 1) {
+    return albums?.value ?? []
+  }
+  if (selectedCategory.value === 2) {
+    return podcasts?.value ?? []
+  }
+  // return [...(albums?.value ?? []), ...(podcasts?.value ?? [])]
+})
+
+const selectedCategory = useRouteQuery('category', undefined)
+const categories = [
+  { id: undefined, name: 'All' },
+  { id: 1, name: 'Albums' },
+  { id: 2, name: 'Podcasts' },
+]
 </script>
 
 <template>
   <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
-    <section
-      id="TopNav"
-      class="h-[60px] z-20 bg-[#101010] bg-opacity-80 flex items-center justify-end"
-    >
-<!--      <button-->
-<!--        type="button"-->
-<!--        class="rounded-2xl bg-gray-200 py-1 w-20 hover:bg-white mr-10 cursor-pointer font-medium"-->
-<!--      >-->
-<!--        Log in-->
-<!--      </button>-->
-    </section>
 
-    <section>
-      <div class="flex items-center justify-between mb-4">
-        <button class="text-white text-sm font-medium">
-          dfidkd
-        </button>
+    <section class="flex-1 overflow-y-auto px-4 pt-6 pb-6">
+      <div class="flex gap-3 ml-15">
+        <Button
+          v-for="category in categories"
+          :key="category.id"
+          :label="category.name"
+          @click="selectedCategory = category.id"
+          severity="secondary"
+          rounded
+        />
       </div>
 
-      <div v-if="isAlbumsLoading" class="text-gray-400">Loading...</div>
-      <div v-else-if="albumsError" class="text-white">Failed to load albums</div>
+      <div v-if="isAlbumsLoading || isPodcastsLoading" class="text-gray-400">Loading...</div>
+      <div v-else-if="albumsError || podcastsError" class="text-white">Failed to load data</div>
       <LibraryCardList
+        v-else
         title="Albums"
-        :items="albums ?? []"
+        :items="cards"
       />
     </section>
   </div>
 </template>
-
-<style scoped></style>

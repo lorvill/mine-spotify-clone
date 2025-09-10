@@ -11,17 +11,6 @@ const { data: songs, isLoading: isSongLoading, error: songError } = useSongsQuer
 
 <template>
   <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
-    <section
-      id="TopNav"
-      class="h-[60px] z-20 bg-[#101010] bg-opacity-80 flex items-center justify-end"
-    >
-      <button
-        type="button"
-        class="rounded-2xl bg-gray-200 py-1 w-20 hover:bg-white mr-10 cursor-pointer font-medium"
-      >
-        Log in
-      </button>
-    </section>
 
     <div class="flex-1 overflow-y-auto no-scrollbar">
       <section id="Podcasts" class="mt-6 px-4">

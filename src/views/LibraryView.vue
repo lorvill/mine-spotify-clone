@@ -4,7 +4,6 @@ import ContentLibrary from '@/components/ContentLibrary.vue'
 
 <template>
   <div>
-
     <ContentLibrary />
   </div>
 </template>

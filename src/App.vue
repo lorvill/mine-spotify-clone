@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import TheSidebar from '@/components/TheSidebar.vue'
+import TopNavigation from '@/components/TopNavigation.vue'
 </script>
 
 <template>
   <TheSidebar />
+  <TopNavigation />
 
   <router-view v-slot="{ Component }">
     <transition name="fade" mode="out-in">

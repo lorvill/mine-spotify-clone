@@ -33,23 +33,21 @@ const props = defineProps<{
     </template>
 
     <template v-slot:controls="{ scroll }">
-      <div class="flex justify-between m-5">
+      <div class="flex justify-between ml-5 mr-5 mt-1" v-show="scroll">
         <button
-          class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center hover:bg-gray-400 cursor-pointer"
+          class="w-8 h-8 rounded-full bg-neutral-600 flex items-center justify-center hover:bg-neutral-400 cursor-pointer"
           @click="scroll('left')"
         >
-          <img src="/images/icons/right-thin-chevron-svgrepo-com.svg" class="transform rotate-180 w-4 h-4" alt="#!"
+          <img src="/images/icons/chevron.svg" class="transform rotate-180 w-4 h-4" alt="#!"
           />
         </button>
         <button
-          class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center hover:bg-gray-400 cursor-pointer"
+          class="w-8 h-8 rounded-full bg-neutral-600 flex items-center justify-center hover:bg-neutral-400 cursor-pointer"
           @click="scroll('right')"
         >
-          <img src="/images/icons/right-thin-chevron-svgrepo-com.svg" class="w-4 h-4" alt="#!" />
+          <img src="/images/icons/chevron.svg" class="w-4 h-4" alt="#!" />
         </button>
       </div>
-
-      <hr class="border-b border-b-gray-800 mt-2" />
     </template>
   </TheSlider>
 </template>
