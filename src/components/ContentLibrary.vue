@@ -8,6 +8,14 @@ import { computed } from 'vue'
 
 const { data: albums, isLoading: isAlbumsLoading, error: albumsError } = useAlbumsQuery()
 const { data: podcasts, isLoading: isPodcastsLoading, error: podcastsError } = usePodcastsQuery()
+const selectedCategory = useRouteQuery('category', undefined)
+
+const categories = [
+  { id: undefined, name: 'All' },
+  { id: 1, name: 'Albums' },
+  { id: 2, name: 'Podcasts' },
+]
+
 const cards = computed(() => {
   if (selectedCategory.value === undefined) {
     return [...(albums?.value ?? []), ...(podcasts?.value ?? [])]
@@ -21,12 +29,6 @@ const cards = computed(() => {
   // return [...(albums?.value ?? []), ...(podcasts?.value ?? [])]
 })
 
-const selectedCategory = useRouteQuery('category', undefined)
-const categories = [
-  { id: undefined, name: 'All' },
-  { id: 1, name: 'Albums' },
-  { id: 2, name: 'Podcasts' },
-]
 </script>
 
 <template>

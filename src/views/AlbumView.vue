@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import SelectedAlbum from '@/components/SelectedAlbum.vue'
+import TheAlbum from '@/components/TheAlbum.vue'
 
 </script>
 
 <template>
-<SelectedAlbum />
+<TheAlbum />
 </template>
 
 <style scoped></style>
