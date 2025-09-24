@@ -6,6 +6,7 @@ import { useTrackStore } from '@/stores/trackStore.ts'
 import type { Track } from '@/types/track.ts'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
 import DropDownMenu from './DropDownMenu.vue'
+import ThePlayer from '@/components/ThePlayer.vue'
 
 const store = useTrackStore()
 const route = useRoute() // получаем объект текущего маршрута
@@ -28,11 +29,11 @@ function toggleTrack(track: Track) {
 </script>
 
 <template>
-  <div class="w-[calc(100%-240px)] fixed right-0 h-screen bg-neutral-900 overflow-auto">
+  <div class=" w-[calc(100%-240px)] fixed right-0 h-screen bg-neutral-900">
     <div v-if="isAlbumLoading" class="text-gray-400 text-center mt-20">Loading...</div>
     <div v-else-if="albumError" class="text-red-500 text-center mt-20">Failed to load data</div>
 
-    <div v-else-if="album" class="p-8">
+    <div v-else-if="album" class="p-8 flex-1 overflow-auto">
       <div class="flex items-center gap-6 mb-6">
         <img :src="album.albumCover" alt="cover" class="w-40 h-40 rounded-md shadow-lg" />
         <div>
@@ -51,8 +52,9 @@ function toggleTrack(track: Track) {
           @click="toggleTrack(track)"
         >
 
-            <div class="w-6 h-6 p-1 flex items-center justify-center">
-              <button v-if="hoverIndex === index" @click="toggleTrack(track)">
+
+            <div class="w-4 h-4 flex items-center justify-center">
+              <button v-if="hoverIndex === index">
                 <img
                   class="filter invert cursor-pointer"
                   :src="
@@ -78,6 +80,11 @@ function toggleTrack(track: Track) {
         </li>
       </ul>
     </div>
+
+    <div>
+      <ThePlayer />
+    </div>
+
   </div>
 </template>
 
