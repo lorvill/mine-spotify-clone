@@ -3,7 +3,6 @@
 
 <template>
   <section
-    id="TopNav"
     class="h-[60px] z-20 bg-[#101010] bg-opacity-80 flex items-center justify-end"
   >
 

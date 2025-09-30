@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { useSelectAlbumQuery } from '@/composables/useSelectAlbumQuery.ts'
 import { useTrackStore } from '@/stores/trackStore.ts'
+import { computed } from 'vue'
 
-const route = useRoute()
-const albumId = route.params.id as string
-const { data: album } = useSelectAlbumQuery(albumId)
 const store = useTrackStore()
+const currentTrackName = computed(() => store.activeTrack?.name)
+const currentAlbumName = computed(() => store.activeAlbum?.name)
+const currentCover = computed(() => store.activeAlbum?.albumCover)
+const currentTrackIndex = computed(() => store.activeTrackIndex)
+
 </script>
 
 <template>
@@ -14,29 +15,40 @@ const store = useTrackStore()
     <div class="flex items-center p-2 pl-5">
       <img
         class="w-14 h-14 rounded-xl object-cover"
-        :src="album?.albumCover"
+        :src="currentCover"
         alt="track cover"
       />
       <div class="ml-3">
-        <p class="text-white text-sm">{{ album?.name }}</p>
-        <p class="text-gray-400 text-xs">{{ album?.name }}</p>
+        <p class="text-white text-sm">{{ currentTrackName }}</p>
+        <p class="text-gray-400 text-xs">{{ currentAlbumName }}</p>
       </div>
     </div>
 
     <div class="flex items-center flex-col">
-      <div class="gap-10 flex pb-4">
-        <button @click="store.playTrack()">
+      <div class="gap-7 flex pb-4">
+        <button><img src="/images/icons/shuffle.png" class="w-5 h-5 filter invert cursor-pointer"></button>
+
+        <button @click="store.previousTrack()">
           <img
             src="/images/icons/forward-button.png"
             alt="play"
             class="rotate-180 w-5 h-5 filter invert cursor-pointer">
         </button>
-        <button>
-          <img src="/images/icons/play-button-arrowhead.png" alt="play" class="w-5 h-5 filter invert cursor-pointer">
+
+        <button
+          @click="store.toggleTrack()"
+          class="w-10 h-10 rounded-full bg-white hover:scale-110 flex items-center justify-center transition-transform cursor-pointer">
+          <img
+            :src="store.isPlaying ? '/images/icons/pause.png' : '/images/icons/play-button-arrowhead.png'"
+            alt="#!"
+            class="w-5 h-5">
         </button>
-        <button>
+
+        <button @click="store.nextTrack()">
           <img src="/images/icons/forward-button.png" alt="play" class="w-5 h-5 filter invert cursor-pointer">
         </button>
+
+        <button @click="store.repeatTrack()"><img src="/images/icons/repeat.png" class="w-5 h-5 filter invert cursor-pointer"></button>
       </div>
 
       <div class="progress-bar">
@@ -51,7 +63,6 @@ const store = useTrackStore()
 </template>
 
 <style scoped>
-
 .progress-bar {
   width: 30rem;
   height: 4px;
