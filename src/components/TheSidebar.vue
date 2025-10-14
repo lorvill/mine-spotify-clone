@@ -33,22 +33,6 @@ function isActive(path: string) {
         </RouterLink>
 
         <RouterLink
-          to="/search"
-          class="flex items-center gap-3 mb-4 hover:grayscale hover:brightness-150 transition duration-30"
-        >
-          <img
-            width="23"
-            src="/images/icons/search-inactive.png"
-            :class="isActive('/search') ? 'grayscale brightness-150' : 'grayscale brightness-75'"
-          />
-          <span
-            class="font-medium text-[15px] text-gray-400"
-            :class="isActive('/search') ? 'grayscale brightness-150' : 'text-gray-400'"
-            >Search</span
-          >
-        </RouterLink>
-
-        <RouterLink
           to="/library"
           class="flex items-center gap-3 mb-10 hover:grayscale hover:brightness-150 transition duration-30"
         >

@@ -46,7 +46,7 @@ const cards = computed(() => {
         />
       </div>
 
-      <div v-if="isAlbumsLoading || isPodcastsLoading" class="text-gray-400">Loading...</div>
+      <div v-if="isAlbumsLoading || isPodcastsLoading" class="text-gray-400"></div>
       <div v-else-if="albumsError || podcastsError" class="text-white">Failed to load data</div>
       <LibraryCardList
         v-else

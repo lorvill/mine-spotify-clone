@@ -12,7 +12,6 @@ const props = defineProps<{
   items: Card[] | undefined
 }>()
 
-console.log(props.items)
 </script>
 
 <template>
