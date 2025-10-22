@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useAlbumsQuery } from '@/composables/useAlbumsQuery.ts'
-import { usePodcastsQuery } from '@/composables/usePodcastsQuery.ts'
+import { useAlbumsQuery } from '@/queries/useAlbumsQuery.ts'
+import { usePodcastsQuery } from '@/queries/usePodcastsQuery.ts'
 import { useRouteQuery } from '@/composables/useRouteQuery.ts'
 import LibraryCardList from '@/components/LibraryCardList.vue'
 import Button from 'primevue/button'

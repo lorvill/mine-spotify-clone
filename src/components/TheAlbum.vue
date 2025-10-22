@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTrackStore } from '@/stores/trackStore.ts'
-import { useSelectAlbumQuery } from '@/composables/useSelectAlbumQuery.ts'
+import { useSelectAlbumQuery } from '@/queries/useSelectAlbumQuery.ts'
 import DropDownMenu from './DropDownMenu.vue'
 import ThePlayer from '@/components/ThePlayer.vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
@@ -75,7 +75,10 @@ const hoverIndex = ref<number | null>(null)
             <p class="text-neutral-400 text-sm truncate">{{ album.name }}</p>
           </div>
 
-          <DropDownMenu v-if="hoverIndex === index" />
+          <DropDownMenu
+            v-if="hoverIndex === index"
+            :track="track"
+          />
 
           <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>
         </li>

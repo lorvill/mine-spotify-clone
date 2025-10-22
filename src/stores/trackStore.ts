@@ -19,27 +19,16 @@ export const useTrackStore = defineStore('track', () => {
   })
   const isShuffled = ref(false)
   const volume = ref(1)
+  const lastVolume = ref(volume.value)
   const muted = ref(false)
   const finalVolume = computed(() => (muted.value ? 0 : volume.value ** 2))
+
   audio.addEventListener('timeupdate', () => {
     currentTime.value = audio.currentTime
     duration.value = isFinite(audio.duration) ? audio.duration : 0
   })
   audio.addEventListener('ended', () => {
     nextTrack()
-  })
-
-  function toggleMute() {
-    muted.value = !muted.value
-  }
-
-  function setVolume(value: number) {
-    volume.value = Math.min(1, Math.max(0, value))
-
-  }
-
-  watch(finalVolume, (value) => {
-    audio.volume = value
   })
 
   function playTrack(playlist?: Track[], index = 0, album?: Album) {
@@ -68,6 +57,19 @@ export const useTrackStore = defineStore('track', () => {
   function pauseTrack() {
     isPlaying.value = false
     audio.pause()
+  }
+
+  function playTracksList(tracks: Track[]) {
+    if (!tracks.length) return
+
+    if (activePlaylist.value === tracks && isPlaying.value) {
+      pauseTrack()
+      return
+    }
+
+    activePlaylist.value = tracks
+    activeAlbum.value = null
+    playTrack(tracks, 0)
   }
 
   function shuffleAlbum<T>(track: T[]) { //дженерик - чтоб функция была универсальной и работала с любым типом массивов
@@ -125,13 +127,16 @@ export const useTrackStore = defineStore('track', () => {
     }
   }
 
-  function togglePlayPause(track?: Track, index?: number, album?: Album) {
-    if (!track || activeTrack.value?.id === track.id) {
-      return isPlaying.value ? pauseTrack() : audio.play()
-        .then(() => isPlaying.value = true)
+  function togglePlayPause(track?: Track, index?: number, playlist?: Track[]) {
+    if (!track) {
+      return isPlaying.value ? pauseTrack() : audio.play().then(() => (isPlaying.value = true))
     }
 
-    playTrack(album?.tracks, index, album)
+    if (activeTrack.value?.id === track.id) {
+      return isPlaying.value ? pauseTrack() : audio.play().then(() => (isPlaying.value = true))
+    }
+
+    playTrack(playlist ?? activePlaylist.value, index)
   }
 
   function repeatTrack() {
@@ -142,6 +147,25 @@ export const useTrackStore = defineStore('track', () => {
     audio.currentTime = value
     currentTime.value = value
   }
+
+  function toggleMute() {
+    muted.value = !muted.value
+
+    if (muted.value) {
+      lastVolume.value = volume.value
+      setVolume(0)
+    } else {
+      setVolume(lastVolume.value)
+    }
+  }
+
+  function setVolume(value: number) {
+    volume.value = Math.min(1, Math.max(0, value))
+  }
+
+  watch(finalVolume, (value) => {
+    audio.volume = value
+  })
 
   return {
     playPlaylist,
@@ -164,5 +188,6 @@ export const useTrackStore = defineStore('track', () => {
     toggleMute,
     finalVolume,
     setVolume,
+    playTracksList,
   }
 })

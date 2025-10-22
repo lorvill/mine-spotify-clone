@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import HomeCardList from '@/components/HomeCardList.vue'
-import { usePodcastsQuery } from '@/composables/usePodcastsQuery.ts'
-import { useRadioQuery } from '@/composables/useRadioQuery.ts'
-import { useSongsQuery } from '@/composables/useSongsQuery.ts'
+import { usePodcastsQuery } from '@/queries/usePodcastsQuery.ts'
+import { useRadioQuery } from '@/queries/useRadioQuery.ts'
+import { useSongsQuery } from '@/queries/useSongsQuery.ts'
 
 const { data: podcasts, isLoading: isPodcastsLoading, error: podcastsError } = usePodcastsQuery()
 const { data: radio, isLoading: isRadioLoading, error: radioError } = useRadioQuery()

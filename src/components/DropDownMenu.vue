@@ -1,17 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Track } from '@/types/track.ts'
+import { useLikedTracks } from '@/composables/useLikedTracks.ts'
+import { useDropDownStore } from '@/stores/dropdownStore.ts'
+import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
 
 type Option = {
-  value: string,
+  option: string,
   name: string
 }
 
+const props = defineProps<{ track: Track }>()
+const { addLikedTracksMutation, removeLikedTracksMutation } = useLikedTracks()
 const options: Option[] = [
-  { value: 'add', name: 'Add to Liked Songs' },
-  { value: 'remove', name: 'Remove from Liked Songs' },
-  { value: 'share', name: 'Share' }
+  { option: 'add', name: 'Add to Liked Songs' },
+  { option: 'remove', name: 'Remove from Liked Songs' },
+  { option: 'share', name: 'Share' }
 ]
-
 let selectedOption = ref<Option | null>(null)
 let isOpenedMenu = ref(false)
 
@@ -21,6 +26,17 @@ function toggleDropdown() {
 
 function selectOption(option: Option) {
   selectedOption.value = option
+}
+
+function handleTrack() {
+  if (!props.track) return
+  if (selectedOption.value?.option === 'add') {
+    addLikedTracksMutation.mutate(props.track)
+  } else if (selectedOption.value?.option === 'remove') {
+    removeLikedTracksMutation.mutate(props.track)
+  }
+
+  isOpenedMenu.value = false
 }
 </script>
 
@@ -45,8 +61,8 @@ function selectOption(option: Option) {
       <ul class="py-1">
         <li
           v-for="option in options"
-          :key="option.value"
-          @click="selectOption(option)"
+          :key="option.option"
+          @click="() => { selectOption(option); handleTrack() }"
           class="px-4 py-2 text-sm text-white hover:bg-neutral-600 rounded-xl cursor-pointer transition"
         >
           {{ option.name }}

@@ -80,7 +80,7 @@ const currentCover = computed(() => store.activeAlbum?.albumCover)
       </div>
     </div>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 p-4">
       <button
         @click="store.toggleMute()"
         class="hover:scale-110 transition-transform cursor-pointer">

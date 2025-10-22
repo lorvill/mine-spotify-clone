@@ -2,8 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LibraryView from '@/views/LibraryView.vue'
 import AlbumView from '@/views/AlbumView.vue'
-import ThePlaylist from '@/components/ThePlaylist.vue'
+import LikedTracks from '@/components/LikedTracks.vue'
 import PlaylistView from '@/views/PlaylistView.vue'
+import LikedTracksView from '@/views/LikedTracksView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,14 +25,14 @@ const router = createRouter({
       component: AlbumView,
     },
     {
-      path: '/create-playlist',
-      name: 'playlist',
-      component: HomeView,
+      path: '/playlist/:name',
+      name: 'create-playlist',
+      component: PlaylistView,
     },
     {
-      path: '/playlist',
-      name: 'playlist',
-      component: PlaylistView,
+      path: '/liked-songs',
+      name: 'liked-songs',
+      component: LikedTracksView,
     },
   ],
 })
