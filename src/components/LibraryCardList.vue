@@ -16,20 +16,25 @@ const props = defineProps<{
 
 <template>
   <div class="px-8 py-6">
-      <div class="grid grid-cols-5 place-items-center gap-5 max-h-[500px]">
-        <router-link
-          v-for="item in props.items ?? []"
-          :key="item.id"
-          :to="{ name: 'album', params: { id: item.id } }"
-        >
-          <TheCard
-            :title="item.title"
-            :subtitle="item.subtitle"
-            :image="item.image"
-          />
-        </router-link>
-      </div>
+    <div
+      class="grid gap-5 place-items-center
+             grid-cols-1
+             sm:grid-cols-2
+             md:grid-cols-3
+             lg:grid-cols-5"
+    >
+      <router-link
+        v-for="item in props.items ?? []"
+        :key="item.id"
+        :to="{ name: 'album', params: { id: item.id } }"
+        class="w-full"
+      >
+        <TheCard
+          :title="item.title"
+          :subtitle="item.subtitle"
+          :image="item.image"
+        />
+      </router-link>
+    </div>
   </div>
 </template>
-
-<style scoped></style>

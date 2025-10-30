@@ -26,7 +26,7 @@ function createPlaylist() {
   }
   addPlaylistMutation.mutate(newPlaylist, {
     onSuccess: (data) => {
-      router.push(`/playlist/${data.name.replace(/\s+/g, '-')}`)
+      router.push(`/playlist/${data.id}`)
       closeModal()
     },
     onError: (error) => {
@@ -88,7 +88,6 @@ defineExpose({ openModal })
                 >
                   Create
                 </button>
-
             </div>
           </div>
         </div>

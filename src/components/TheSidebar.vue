@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, useRoute } from 'vue-router'
 import { usePlaylist } from '@/composables/usePlaylist.ts'
-import PlaylistCreateModal from '@/components/PlaylistCreateModal.vue'
+import CreatePlaylistModal from '@/components/CreatePlaylistModal.vue'
 import { ref } from 'vue'
 
 const route = useRoute()
@@ -63,7 +63,7 @@ console.log(playlistQuery.data)
       >
         <img width="30" src="/images/icons/playlist-inactive.png" />
         <span class="font-medium text-[15px] text-gray-400">Create Playlist</span>
-        <PlaylistCreateModal ref="modalWindow" />
+        <CreatePlaylistModal ref="modalWindow" />
       </button>
 
       <RouterLink

@@ -2,12 +2,13 @@
 import { useTrackStore } from '@/stores/trackStore.ts'
 import { computed } from 'vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
+import { useLikedTracks } from '@/composables/useLikedTracks.ts'
 
 const store = useTrackStore()
 const currentTrackName = computed(() => store.activeTrack?.name)
 const currentAlbumName = computed(() => store.activeAlbum?.name)
 const currentCover = computed(() => store.activeAlbum?.albumCover)
-
+const { addLikedTracksMutation, removeLikedTracksMutation } = useLikedTracks()
 </script>
 
 <template>

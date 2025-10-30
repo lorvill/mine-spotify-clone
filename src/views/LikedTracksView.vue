@@ -5,5 +5,3 @@ import LikedTracks from '@/components/LikedTracks.vue'
 <template>
   <LikedTracks />
 </template>
-
-<style scoped></style>

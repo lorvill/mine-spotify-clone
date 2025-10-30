@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAlbumsQuery } from '@/queries/useAlbumsQuery.ts'
 import { usePodcastsQuery } from '@/queries/usePodcastsQuery.ts'
-import { useRouteQuery } from '@/composables/useRouteQuery.ts'
+import { useRouteQuery } from '@/queries/useRouteQuery.ts'
 import LibraryCardList from '@/components/LibraryCardList.vue'
 import Button from 'primevue/button'
 import { computed } from 'vue'

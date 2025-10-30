@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheSlider from '@/components/TheSlider.vue'
+import TheSlider from '@/components/ui/TheSlider.vue'
 import TheCard from '@/components/TheCard.vue'
 
 interface Card {

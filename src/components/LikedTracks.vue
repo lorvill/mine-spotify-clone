@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { useTrackStore } from '@/stores/trackStore.ts'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
-import DropDownMenu from './DropDownMenu.vue'
-import ThePlayer from '@/components/ThePlayer.vue'
+import LikedTrackDropdown from './LikedTrackDropdown.vue'
+import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { useLikedTracks } from '@/composables/useLikedTracks.ts'
 
 const { likedTracksQuery } = useLikedTracks()
@@ -12,7 +12,7 @@ const hoverIndex = ref<number | null>(null)
 </script>
 <template>
   <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
-    <!-- Верхняя часть -->
+
     <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#6143b5]/90 to-[#3f2b78]/70">
       <div class="flex items-end gap-6 mb-0">
         <img
@@ -28,7 +28,6 @@ const hoverIndex = ref<number | null>(null)
 
     </div>
 
-    <!-- Список треков -->
     <div
       class="flex-1 overflow-y-auto p-8 pt-0 bg-gradient-to-b from-[#27234d]/80 to-[#594d78]/10"
     >
@@ -82,7 +81,7 @@ const hoverIndex = ref<number | null>(null)
             <p class="text-neutral-400 text-sm truncate">Liked Songs</p>
           </div>
 
-          <DropDownMenu
+          <LikedTrackDropdown
             v-if="hoverIndex === index"
             :track="track" />
 
@@ -91,7 +90,6 @@ const hoverIndex = ref<number | null>(null)
       </ul>
     </div>
 
-    <!-- Плеер -->
     <transition
       enter-active-class="transition-opacity duration-400 ease-out"
       enter-from-class="opacity-0"

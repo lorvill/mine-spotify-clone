@@ -7,20 +7,21 @@ export function useLikedTracks() {
   const addLikedTracksMutation = useMutation({
     mutationFn: addLikedTracks,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
+      void queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
     },
   })
 
   const removeLikedTracksMutation = useMutation({
     mutationFn: removeLikedTracks,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
+      void queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
     },
   })
 
   const likedTracksQuery = useQuery({
-    queryKey: ['likedSongs'],
-    queryFn: () => fetch(`https://64e9970736435f75.mokky.dev/liked-tracks`).then(res => res.json()),
+    queryKey: ['likedTracks'],
+    queryFn: () =>
+      fetch(`https://64e9970736435f75.mokky.dev/liked-tracks`).then(res => res.json()),
   })
 
   return {
@@ -34,9 +35,7 @@ async function addLikedTracks(track: Track) {
   const url = 'https://64e9970736435f75.mokky.dev/liked-tracks'
   const res = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(track),
   })
   if (!res.ok) throw new Error('Failed to add a track')
@@ -44,14 +43,10 @@ async function addLikedTracks(track: Track) {
 }
 
 async function removeLikedTracks(track: Track) {
-  const url = 'https://64e9970736435f75.mokky.dev/liked-tracks'
+  const url = `https://64e9970736435f75.mokky.dev/liked-tracks/${track.id}`
   const res = await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(track),
-  })
+    method: 'DELETE'
+   })
   if (!res.ok) throw new Error('Failed to delete track')
   return res.json()
 }
