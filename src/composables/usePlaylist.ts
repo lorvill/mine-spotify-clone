@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useQuery } from '@tanstack/vue-query'
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 export function usePlaylist() {
   const queryClient = useQueryClient()
@@ -17,15 +17,9 @@ export function usePlaylist() {
     },
   })
 
-  const playlistQuery = useQuery({
-    queryKey: ['playlist'],
-    queryFn: () => fetch(`https://64e9970736435f75.mokky.dev/playlist`).then(res => res.json()),
-  })
-
   return {
     addPlaylistMutation,
     removePlaylistMutation,
-    playlistQuery,
   }
 }
 

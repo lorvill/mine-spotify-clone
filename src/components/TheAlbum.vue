@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTrackStore } from '@/stores/trackStore.ts'
 import { useSelectAlbumQuery } from '@/queries/useSelectAlbumQuery.ts'
-import LikedTrackDropdown from './LikedTrackDropdown.vue'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
+import TrackDropDown from '@/components/TrackDropDown.vue'
 
 const store = useTrackStore()
 const route = useRoute()
 const albumId = route.params.id as string
 const { data: album, isLoading: isAlbumLoading, error: albumError } = useSelectAlbumQuery(albumId)
 const hoverIndex = ref<number | null>(null)
-console.log()
-console.log(album.albumCover)
 </script>
 
 <template>
@@ -59,7 +57,7 @@ console.log(album.albumCover)
           class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-800 transition-colors cursor-pointer"
           @mouseenter="hoverIndex = index"
           @mouseleave="hoverIndex = null"
-          @click="store.togglePlayPause(track, index, album.tracks)"
+          @click="store.togglePlayPause(track, index, album.tracks, album)"
         >
           <div class="w-4 h-4 flex items-center justify-center">
             <button v-if="hoverIndex === index">
@@ -76,9 +74,9 @@ console.log(album.albumCover)
             <p class="text-white font-medium truncate">{{ track.name }}</p>
             <p class="text-neutral-400 text-sm truncate">{{ album.name }}</p>
           </div>
-            <LikedTrackDropdown
+            <TrackDropDown
               v-if="hoverIndex === index"
-              :track="track" />
+            />
           <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>
         </li>
       </ul>

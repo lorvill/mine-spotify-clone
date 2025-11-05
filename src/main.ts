@@ -11,7 +11,15 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-app.use(VueQueryPlugin)
+app.use(VueQueryPlugin, {
+  queryClientConfig: {
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 2,
+      }
+    }
+  }
+})
 app.use(PrimeVue, {
   theme: {
     preset: Aura

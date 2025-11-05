@@ -2,20 +2,29 @@
 import { useTrackStore } from '@/stores/trackStore.ts'
 import { computed } from 'vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
-import { useLikedTracks } from '@/composables/useLikedTracks.ts'
 
 const store = useTrackStore()
 const currentTrackName = computed(() => store.activeTrack?.name)
 const currentAlbumName = computed(() => store.activeAlbum?.name)
 const currentCover = computed(() => store.activeAlbum?.albumCover)
-const { addLikedTracksMutation, removeLikedTracksMutation } = useLikedTracks()
+
+import { watch } from 'vue'
+
+watch(
+  () => store.activeAlbum,
+  (val) => {
+    console.log('activeAlbum changed:', val)
+  },
+  { immediate: true }
+)
+
+console.log(store.activeAlbum)
 </script>
 
 <template>
   <div class="bg-neutral-950 flex items-center justify-between w-[calc(100%-240px)] fixed bottom-0 h-20">
     <div class="flex items-center p-2 pl-5">
       <img
-        v-if="currentCover"
         class="w-14 h-14 rounded-xl object-cover"
         :src="currentCover"
         alt="cover"
@@ -24,6 +33,10 @@ const { addLikedTracksMutation, removeLikedTracksMutation } = useLikedTracks()
         <p class="text-white text-sm">{{ currentTrackName }}</p>
         <p class="text-gray-400 text-xs">{{ currentAlbumName }}</p>
       </div>
+      <div class="ml-3 flex">
+      </div>
+
+
     </div>
 
     <div class="flex items-center flex-col">
@@ -80,6 +93,8 @@ const { addLikedTracksMutation, removeLikedTracksMutation } = useLikedTracks()
         </span>
       </div>
     </div>
+
+
 
     <div class="flex items-center gap-4 p-4">
       <button

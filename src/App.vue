@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TheSidebar from '@/components/TheSidebar.vue'
 import TopNavigation from '@/components/TopNavigation.vue'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 </script>
 
 <template>
@@ -12,6 +13,8 @@ import TopNavigation from '@/components/TopNavigation.vue'
       <component :is="Component" />
     </transition>
   </router-view>
+
+  <VueQueryDevtools />
 </template>
 
 <style scoped>

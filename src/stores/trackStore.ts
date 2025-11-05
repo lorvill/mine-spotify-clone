@@ -2,13 +2,14 @@ import { defineStore } from 'pinia'
 import type { Track } from '@/types/track.ts'
 import type { Album } from '@/types/album.ts'
 import { computed, ref, watch } from 'vue'
+import { useLikedTracks } from '@/composables/useLikedTracks.ts'
 
 export const useTrackStore = defineStore('track', () => {
   const audio = new Audio()
   const duration = ref(0)
   const currentTime = ref(0)
   const activeTrackIndex = ref<number | null>(null)
-  const activePlaylist = ref<Track[] | null>(null)
+  const activePlaylist = ref<Track[]>()
   const activeAlbum = ref<Album | null>(null)
   const isPlaying = ref(false)
   const activeTrack = computed(() => {
@@ -22,6 +23,20 @@ export const useTrackStore = defineStore('track', () => {
   const lastVolume = ref(volume.value)
   const muted = ref(false)
   const finalVolume = computed(() => (muted.value ? 0 : volume.value ** 2))
+  // const { addLikedTracksMutation, removeLikedTracksMutation, likedTracksQuery } = useLikedTracks()
+  // const likedTracks = computed(() => likedTracksQuery.data?.value ?? [])
+  // const isTrackLiked =  (track: Track | null) => !!track && likedTracks.value.some(t => t.id === track.id)
+  //
+  // function toggleLike() {
+  //   const track = activeTrack.value
+  //   if (!track) return
+  //   const liked = isTrackLiked(track)
+  //   if (liked) {
+  //     removeLikedTracksMutation.mutate(track.id)
+  //   } else {
+  //     addLikedTracksMutation.mutate(track.id)
+  //   }
+  // }
 
   audio.addEventListener('timeupdate', () => {
     currentTime.value = audio.currentTime
@@ -127,7 +142,7 @@ export const useTrackStore = defineStore('track', () => {
     }
   }
 
-  function togglePlayPause(track?: Track, index?: number, playlist?: Track[]) {
+  function togglePlayPause(track?: Track, index?: number, playlist?: Track[], album?: Album) {
     if (!track) {
       return isPlaying.value ? pauseTrack() : audio.play().then(() => (isPlaying.value = true))
     }
@@ -136,8 +151,9 @@ export const useTrackStore = defineStore('track', () => {
       return isPlaying.value ? pauseTrack() : audio.play().then(() => (isPlaying.value = true))
     }
 
-    playTrack(playlist ?? activePlaylist.value, index)
+    playTrack(playlist ?? activePlaylist.value, index, album)
   }
+
 
   function repeatTrack() {
 
@@ -189,5 +205,6 @@ export const useTrackStore = defineStore('track', () => {
     finalVolume,
     setVolume,
     playTracksList,
+
   }
 })

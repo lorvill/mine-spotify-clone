@@ -2,14 +2,15 @@
 </script>
 
 <template>
-  <section class="h-[60px] z-20 bg-[#101010] bg-opacity-80 flex items-center px-10">
+  <section class="h-[60px] z-20 bg-[#101010] bg-opacity-80 flex items-center px-6">
+    <div class="w-[240px] hidden md:block"></div>
 
-    <form class="spotify-search absolute left-1/2 -translate-x-1/2">
+    <form class="spotify-search flex-1 mx-4 md:mx-0">
       <input
         name="s"
         type="search"
         placeholder="What do you want to play?"
-      >
+      />
     </form>
 
     <button
@@ -23,15 +24,17 @@
 
 <style scoped>
 .spotify-search input {
-  padding: 8px 12px 8px 12px;
+  width: 100%;
+  min-width: 180px;
+  max-width: 550px;
+  padding: 8px 12px;
   border: 2px solid transparent;
   border-radius: 25px;
   background-color: #282828;
   color: #fff;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease;
-  width: 550px;
+  transition: border-color 0.2s ease, background 0.2s ease, width 0.3s ease;
 }
 
 .spotify-search input::placeholder {

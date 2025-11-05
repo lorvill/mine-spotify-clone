@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { usePlaylist } from '@/composables/usePlaylist.ts'
 import { useTrackStore } from '@/stores/trackStore.ts'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
-import LikedTrackDropdown from './LikedTrackDropdown.vue'
+import OldDropdown from './OldDropdown.vue'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
+import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
 
 const route = useRoute()
 const trackStore = useTrackStore()
-const { playlistQuery } = usePlaylist()
+const { data } = usePlaylistQuery()
 const currentName = computed(() => route.params.name as string) // получаем имя из URL
 const hoverIndex = ref<number | null>(null)
 
 console.log(currentName.value)
-
 </script>
 
 <template>
@@ -37,7 +36,7 @@ console.log(currentName.value)
       <div class="p-5 pl-0 flex items-center gap-4">
         <button
           class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center hover:scale-105 transition-transform duration-200 shadow-md cursor-pointer"
-          @click="trackStore.playTracksList(playlistQuery.data.value)"
+          @click="trackStore.playTracksList(data.value)"
         >
           <img
             :src="
@@ -68,14 +67,14 @@ console.log(currentName.value)
       </div>
 
       <hr class="w-full h-px bg-neutral-700 border-0 dark:bg-neutral-700 mb-5" />
-      <ul v-if="playlistQuery?.data.value">
+      <ul v-if="data.value">
         <li
-          v-for="(track, index) in playlistQuery.data.value"
+          v-for="(track, index) in data.value"
           :key="track.id"
           class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-200/10 transition-colors cursor-pointer"
           @mouseenter="hoverIndex = index"
           @mouseleave="hoverIndex = null"
-          @click="trackStore.togglePlayPause(track, index, playlistQuery.data.value)"
+          @click="trackStore.togglePlayPause(track, index, data.value)"
         >
           <div class="w-4 h-4 flex items-center justify-center">
             <button v-if="hoverIndex === index">
@@ -97,7 +96,7 @@ console.log(currentName.value)
             <p class="text-neutral-400 text-sm truncate"></p>
           </div>
 
-          <LikedTrackDropdown v-if="hoverIndex === index" :track="track" />
+          <OldDropdown v-if="hoverIndex === index" :track="track" />
 
           <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>
         </li>
