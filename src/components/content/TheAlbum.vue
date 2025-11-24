@@ -5,13 +5,14 @@ import { useTrackStore } from '@/stores/trackStore.ts'
 import { useSelectAlbumQuery } from '@/queries/useSelectAlbumQuery.ts'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
-import TrackDropDown from '@/components/TrackDropDown.vue'
+import TrackDropDown from '@/components/ui/TrackDropDown.vue'
 
 const store = useTrackStore()
 const route = useRoute()
 const albumId = route.params.id as string
 const { data: album, isLoading: isAlbumLoading, error: albumError } = useSelectAlbumQuery(albumId)
 const hoverIndex = ref<number | null>(null)
+const openDropdownIndex = ref<number | null>(null)
 </script>
 
 <template>
@@ -54,29 +55,41 @@ const hoverIndex = ref<number | null>(null)
         <li
           v-for="(track, index) in album.tracks"
           :key="track.id"
-          class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-800 transition-colors cursor-pointer"
+          class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-800  transition-colors cursor-pointer"
+          :class="{ 'is-hovered': hoverIndex === index }"
           @mouseenter="hoverIndex = index"
           @mouseleave="hoverIndex = null"
           @click="store.togglePlayPause(track, index, album.tracks, album)"
         >
-          <div class="w-4 h-4 flex items-center justify-center">
-            <button v-if="hoverIndex === index">
-              <img
-                class="filter invert cursor-pointer"
-                :src="store.isPlaying ? '/images/icons/pause.png' : '/images/icons/play-button-arrowhead.png'"
-                alt="play/stop"
-              />
-            </button>
-            <span v-else class="text-neutral-400">{{ index + 1 }}</span>
-          </div>
+            <div class="w-4 h-4 flex items-center justify-center relative">
+              <span class="track-number text-neutral-400">{{ index + 1 }}</span>
+              <button
+                class="play-pause-button"
+                :class="{ 'is-playing': store.isPlaying, 'is-hovered': hoverIndex === index }"
+              >
+                <img
+                  class="filter invert cursor-pointer w-full h-full"
+                  src="/images/icons/play-button-arrowhead.png"
+                />
+                <img
+                  class="filter invert cursor-pointer w-full h-full"
+                  src="/images/icons/pause.png"
+                />
+              </button>
+            </div>
+
 
           <div class="flex-1 ml-4">
             <p class="text-white font-medium truncate">{{ track.name }}</p>
             <p class="text-neutral-400 text-sm truncate">{{ album.name }}</p>
           </div>
+
+          <div class="relative">
             <TrackDropDown
-              v-if="hoverIndex === index"
+              :track="track"
+              @click.stop="openDropdownIndex = openDropdownIndex === index ? null : index"
             />
+          </div>
           <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>
         </li>
       </ul>
@@ -93,3 +106,49 @@ const hoverIndex = ref<number | null>(null)
     </transition>
   </div>
 </template>
+
+<style scoped>
+.track-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+li.is-hovered .track-number {
+  opacity: 0;
+}
+
+.play-pause-button {
+  inset: 0;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-pause-button img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.play-pause-button img:first-child {
+  opacity: 1;
+}
+
+.play-pause-button.is-hovered {
+  opacity: 1;
+}
+
+.play-pause-button.is-hovered.is-playing img:first-child {
+  opacity: 0;
+}
+.play-pause-button.is-hovered.is-playing img:last-child {
+  opacity: 1;
+}
+</style>

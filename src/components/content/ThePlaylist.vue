@@ -3,17 +3,33 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTrackStore } from '@/stores/trackStore.ts'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
-import OldDropdown from './OldDropdown.vue'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
 
 const route = useRoute()
 const trackStore = useTrackStore()
 const { data } = usePlaylistQuery()
-const currentName = computed(() => route.params.name as string) // получаем имя из URL
-const hoverIndex = ref<number | null>(null)
 
-console.log(currentName.value)
+console.log('data:', data.value)
+console.log('route.params.id:', route.params.id)
+// Получаем ID из URL
+const playlistId = computed(() => route.params.id)
+
+// Находим нужный плейлист
+const currentPlaylist = computed(() => {
+  if (!data.value || !playlistId.value) return null
+  return data.value.find(p => p.id === playlistId.value)
+})
+
+// Имя плейлиста
+const currentName = computed(() => {
+  return currentPlaylist.value?.name ?? 'Playlist'
+})
+
+console.log(playlistId.value)
+
+console.log(currentPlaylist.value)
+const hoverIndex = ref<number | null>(null)
 </script>
 
 <template>
@@ -67,40 +83,38 @@ console.log(currentName.value)
       </div>
 
       <hr class="w-full h-px bg-neutral-700 border-0 dark:bg-neutral-700 mb-5" />
-      <ul v-if="data.value">
-        <li
-          v-for="(track, index) in data.value"
-          :key="track.id"
-          class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-200/10 transition-colors cursor-pointer"
-          @mouseenter="hoverIndex = index"
-          @mouseleave="hoverIndex = null"
-          @click="trackStore.togglePlayPause(track, index, data.value)"
-        >
-          <div class="w-4 h-4 flex items-center justify-center">
-            <button v-if="hoverIndex === index">
-              <img
-                class="filter invert cursor-pointer"
-                :src="
-                  trackStore.isPlaying
-                    ? '/images/icons/pause.png'
-                    : '/images/icons/play-button-arrowhead.png'
-                "
-                alt="play/stop"
-              />
-            </button>
-            <span v-else class="text-neutral-400">{{ index + 1 }}</span>
-          </div>
+<!--      <ul v-if="data.value">-->
+<!--        <li-->
+<!--          v-for="(track, index) in data.value"-->
+<!--          :key="track.id"-->
+<!--          class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-200/10 transition-colors cursor-pointer"-->
+<!--          @mouseenter="hoverIndex = index"-->
+<!--          @mouseleave="hoverIndex = null"-->
+<!--          @click="trackStore.togglePlayPause(track, index, data.value)"-->
+<!--        >-->
+<!--          <div class="w-4 h-4 flex items-center justify-center">-->
+<!--            <button v-if="hoverIndex === index">-->
+<!--              <img-->
+<!--                class="filter invert cursor-pointer"-->
+<!--                :src="-->
+<!--                  trackStore.isPlaying-->
+<!--                    ? '/images/icons/pause.png'-->
+<!--                    : '/images/icons/play-button-arrowhead.png'-->
+<!--                "-->
+<!--                alt="play/stop"-->
+<!--              />-->
+<!--            </button>-->
+<!--            <span v-else class="text-neutral-400">{{ index + 1 }}</span>-->
+<!--          </div>-->
 
-          <div class="flex-1 ml-4">
-            <p class="text-white font-medium truncate">{{ track.name }}</p>
-            <p class="text-neutral-400 text-sm truncate"></p>
-          </div>
+<!--          <div class="flex-1 ml-4">-->
+<!--            <p class="text-white font-medium truncate">{{ track.name }}</p>-->
+<!--            <p class="text-neutral-400 text-sm truncate"></p>-->
+<!--          </div>-->
 
-          <OldDropdown v-if="hoverIndex === index" :track="track" />
-
-          <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>
-        </li>
-      </ul>
+<!--          <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>-->
+<!--        </li>-->
+<!--      </ul>-->
     </div>
 
     <transition

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ContentLibrary from '@/components/ContentLibrary.vue'
+import ContentLibrary from '@/components/content/ContentLibrary.vue'
 </script>
 
 <template>

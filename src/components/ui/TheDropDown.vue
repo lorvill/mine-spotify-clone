@@ -1,36 +1,46 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Option } from '@/types/option.ts'
-
-const isOpened = ref(false)
 const props = defineProps<{
   options: Option[]
 }>()
-const selectedOption = ref<string | null>(null)
 
 const emit = defineEmits<{
   (e: 'select', option: Option): void
 }>()
 
+const isOpened = ref(false)
+const selectedOption = ref<string | null>(null)
+const closeDropdown = () => isOpened.value = false
+
 function toggleDropdown() {
   isOpened.value = !isOpened.value
 }
 
-function handleSelect(option: Option) {
-  if (option.children && option.children.length > 0) {
-    selectedOption.value = option.option === selectedOption.value ? null : option.option
-    console.log('selected option:', selectedOption.value)
+function handleSelect(currentOption: Option) {
+  if (currentOption.children) {
+    selectedOption.value = currentOption.option === selectedOption.value ? null : currentOption.option
+    isOpened.value = true
   }
   else {
-    emit('select', option)
+    emit('select', currentOption)
     isOpened.value = false
+  }
+}
+
+function outsideClick(event: MouseEvent | TouchEvent) {
+  if (event.target === event.currentTarget) {
+    closeDropdown()
+    console.log('clicked outside')
   }
 }
 </script>
 
 <template>
-  <div class="relative inline-block text-left mr-2">
-    <button @click.stop="toggleDropdown" class="p-1">
+  <div class="inline-block text-left mr-2 drop-down" @click.self="outsideClick">
+    <button
+      @click.stop="toggleDropdown"
+      class=" p-1">
       <img
         src="/images/icons/dots.png"
         alt="menu"
@@ -40,7 +50,7 @@ function handleSelect(option: Option) {
 
     <div
       v-if="isOpened === true"
-      class="absolute right-0 mt-0 w-50 origin-top-right rounded-xl bg-neutral-700 shadow-lg"
+      class="absolute right-0 mt-0 w-50 origin-top-right rounded-xl bg-neutral-700 shadow-lg z-1"
     >
       <ul class="py-1">
         <li
@@ -69,3 +79,17 @@ function handleSelect(option: Option) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.drop-down {
+  opacity: 1;
+}
+
+.drop-down:hover {
+  opacity: 1;
+}
+
+.drop-down:focus {
+  opacity: 1;
+}
+</style>

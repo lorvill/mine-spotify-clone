@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HomeCardList from '@/components/HomeCardList.vue'
+import HomeCardList from '@/components/cards/HomeCardList.vue'
 import { usePodcastsQuery } from '@/queries/usePodcastsQuery.ts'
 import { useRadioQuery } from '@/queries/useRadioQuery.ts'
 import { useSongsQuery } from '@/queries/useSongsQuery.ts'

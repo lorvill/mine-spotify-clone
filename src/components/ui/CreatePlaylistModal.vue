@@ -1,38 +1,49 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { usePlaylist } from '@/composables/usePlaylist.ts'
 import { useRouter } from 'vue-router'
+import { useImageSelector } from '@/composables/useSelectedImage.ts'
 
 const open = ref(false)
-const closeModal = () => { open.value = false }
+const closeModal = () => {
+  cleanup()
+  open.value = false
+}
 const openModal = () => { open.value = true }
 const { addPlaylistMutation } = usePlaylist()
+const { imagePreview, selectImage, resetImage } = useImageSelector()
+const playlistId = ref()
 const playlistDescription = ref('')
 const playlistName = ref('')
-const playlistId = ref()
 const router = useRouter()
-
+const disabledBtn = computed(() => { return !playlistName.value })
 const outOfModal = (event: MouseEvent | TouchEvent) => {
-  if (event.target === event.currentTarget) {
-    closeModal()
-  }
+  if (event.target === event.currentTarget) closeModal()
+}
+
+function cleanup() {
+  playlistName.value = ''
+  playlistDescription.value = ''
+  resetImage()
 }
 
 function createPlaylist() {
-  const newPlaylist = {
+  const playlist = {
     id: playlistId.value,
     name: playlistName.value,
     description: playlistDescription.value,
   }
-  addPlaylistMutation.mutate(newPlaylist, {
+  addPlaylistMutation.mutate(playlist, {
     onSuccess: (data) => {
       router.push(`/playlist/${data.id}`)
+      console.log('Playlist created successfully:', data)
       closeModal()
     },
     onError: (error) => {
       console.error('Error creating playlist:', error)
     },
   })
+  closeModal()
 }
 
 defineExpose({ openModal })
@@ -46,48 +57,54 @@ defineExpose({ openModal })
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer"
         @click.self="outOfModal"
       >
-
-        <div class="bg-neutral-900 text-white rounded-2xl shadow-2xl w-[650px] h-[300px] flex overflow-hidden animate-fadeIn">
+        <div
+          class="bg-neutral-900 text-white rounded-2xl shadow-2xl w-[650px] h-[300px] flex overflow-hidden animate-fadeIn"
+        >
           <div class="w-[45%] bg-gradient-to-b flex items-center justify-center">
-              <label
-                for="file-upload"
-                class="cursor-pointer w-[250px] h-[250px] bg-neutral-800 rounded-xl flex items-center justify-center shadow-inner hover:scale-105 transition-transform duration-300"
-              >
-                <img
-                  src="/images/icons/music.png"
-                  alt="playlist"
-                  class="w-20 h-20 opacity-90"
-                />
-                <input id="file-upload" type="file" accept="image/*" style="display: none" />
-              </label>
+            <label
+              class="cursor-pointer w-[250px] h-[250px] bg-neutral-800 rounded-xl flex items-center justify-center shadow-inner hover:scale-105 transition-transform duration-300"
+            >
+              <img
+                v-if="imagePreview"
+                :src="imagePreview"
+                class="w-full h-full object-cover rounded-xl"
+              />
+              <img
+                v-else
+                src="/images/icons/music.png"
+                alt="playlist"
+                class="w-20 h-20 opacity-90"
+              />
+              <input type="file" accept="image/*" style="display: none" @change="selectImage" />
+            </label>
           </div>
 
           <div class="w-[55%] p-6 flex flex-col justify-between">
-              <h2 class="text-2xl font-bold mb-3">Create a playlist</h2>
+            <h2 class="text-2xl font-bold mb-3">Create a playlist</h2>
 
-              <form class="flex flex-col gap-3">
-                <input
-                  v-model="playlistName"
-                  type="text"
-                  placeholder="Add a name"
-                  required
-                  class="rounded-xl bg-neutral-700 border-1 border-transparent focus:border-green-500 transition-colors px-3 py-2 text-sm text-white placeholder-neutral-400 outline-none w-full"
-                />
-                <textarea
-                  v-model="playlistDescription"
-                  placeholder="Write an optional description"
-                  class="resize-none rounded-xl bg-neutral-700 border-1 border-transparent focus:border-green-500 transition-colors px-3 py-2 text-sm text-white placeholder-neutral-400 outline-none h-26 w-full"
-                ></textarea>
-              </form>
+            <form class="flex flex-col gap-3">
+              <input
+                v-model="playlistName"
+                type="text"
+                placeholder="Add a name"
+                required
+                class="rounded-xl bg-neutral-700 border-1 border-transparent focus:border-green-500 transition-colors px-3 py-2 text-sm text-white placeholder-neutral-400 outline-none w-full"
+              />
+              <textarea
+                v-model="playlistDescription"
+                placeholder="Write an optional description"
+                class="resize-none rounded-xl bg-neutral-700 border-1 border-transparent focus:border-green-500 transition-colors px-3 py-2 text-sm text-white placeholder-neutral-400 outline-none h-26 w-full"
+              ></textarea>
+            </form>
 
             <div class="flex justify-end">
-
-                <button
-                  @click="createPlaylist"
-                  class="px-6 py-2 rounded-full bg-green-500 text-black font-semibold hover:bg-green-400 transition-colors cursor-pointer text-sm"
-                >
-                  Create
-                </button>
+              <button
+                @click="createPlaylist"
+                :disabled="disabledBtn"
+                class="px-6 py-2 rounded-full bg-green-500 text-black font-semibold hover:bg-green-400 transition-colors cursor-pointer text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Create
+              </button>
             </div>
           </div>
         </div>

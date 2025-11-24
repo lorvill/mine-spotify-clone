@@ -4,7 +4,7 @@ import { useTrackStore } from '@/stores/trackStore.ts'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { useLikedTracks } from '@/composables/useLikedTracks.ts'
-import TrackDropDown from '@/components/TrackDropDown.vue'
+import TrackDropDown from '@/components/ui/TrackDropDown.vue'
 
 const { likedTracksQuery } = useLikedTracks()
 const trackStore = useTrackStore()

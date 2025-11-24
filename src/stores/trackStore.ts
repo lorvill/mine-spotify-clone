@@ -47,7 +47,6 @@ export const useTrackStore = defineStore('track', () => {
   })
 
   function playTrack(playlist?: Track[], index = 0, album?: Album) {
-    // определяем трек, который нужно воспроизвести
     const track = playlist?.[index]
     if (!track) return
 
@@ -59,7 +58,6 @@ export const useTrackStore = defineStore('track', () => {
       audio.src = track.path
     }
 
-    // воспроизводим трек (если уже был тот же трек, начнется с позиции паузы)
     audio.play()
       .then(() => {
         isPlaying.value = true
@@ -109,7 +107,6 @@ export const useTrackStore = defineStore('track', () => {
     if (!album?.tracks?.length) return
 
     activePlaylist.value = getPlaylist(album, activeTrack.value || undefined)
-    console.log(activePlaylist.value)
     activeTrackIndex.value = 0
   }
 
@@ -205,6 +202,5 @@ export const useTrackStore = defineStore('track', () => {
     finalVolume,
     setVolume,
     playTracksList,
-
   }
 })

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TheSidebar from '@/components/TheSidebar.vue'
-import TopNavigation from '@/components/TopNavigation.vue'
+import TheSidebar from '@/components/layout/TheSidebar.vue'
+import TopNavigation from '@/components/layout/TopNavigation.vue'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 </script>
 

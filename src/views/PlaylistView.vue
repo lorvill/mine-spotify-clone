@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ThePlaylist from '@/components/ThePlaylist.vue'
+import ThePlaylist from '@/components/content/ThePlaylist.vue'
 </script>
 
 <template>

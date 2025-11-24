@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LibraryView from '@/views/LibraryView.vue'
 import AlbumView from '@/views/AlbumView.vue'
-import LikedTracks from '@/components/LikedTracks.vue'
+import LikedTracks from '@/components/content/LikedTracks.vue'
 import PlaylistView from '@/views/PlaylistView.vue'
 import LikedTracksView from '@/views/LikedTracksView.vue'
 
@@ -25,7 +25,7 @@ const router = createRouter({
       component: AlbumView,
     },
     {
-      path: '/playlist/:name',
+      path: '/playlist/:id',
       name: 'create-playlist',
       component: PlaylistView,
     },

@@ -82,7 +82,7 @@ console.log(data)
           :key="playlist.id"
           class="text-white"
       >
-        <RouterLink :to="`/playlist/${playlist.name.replace(/\s+/g, '-')}`">
+        <RouterLink :to="`/playlist/${playlist.id}`">
           {{ playlist.name }}
         </RouterLink>
       </li>
