@@ -2,21 +2,26 @@
 import { computed, ref } from 'vue'
 import { usePlaylist } from '@/composables/usePlaylist.ts'
 import { useRouter } from 'vue-router'
-import { useImageSelector } from '@/composables/useSelectedImage.ts'
-
+import FileImageInput from '@/components/ui/FileImageInput.vue'
 const open = ref(false)
+
 const closeModal = () => {
   cleanup()
   open.value = false
 }
+
 const openModal = () => { open.value = true }
 const { addPlaylistMutation } = usePlaylist()
-const { imagePreview, selectImage, resetImage } = useImageSelector()
 const playlistId = ref()
 const playlistDescription = ref('')
 const playlistName = ref('')
 const router = useRouter()
-const disabledBtn = computed(() => { return !playlistName.value })
+const imageFile = ref<File | null>(null)
+
+const disabledBtn = computed(() => {
+  return !playlistName.value
+})
+
 const outOfModal = (event: MouseEvent | TouchEvent) => {
   if (event.target === event.currentTarget) closeModal()
 }
@@ -24,7 +29,6 @@ const outOfModal = (event: MouseEvent | TouchEvent) => {
 function cleanup() {
   playlistName.value = ''
   playlistDescription.value = ''
-  resetImage()
 }
 
 function createPlaylist() {
@@ -57,28 +61,16 @@ defineExpose({ openModal })
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer"
         @click.self="outOfModal"
       >
-        <div
-          class="bg-neutral-900 text-white rounded-2xl shadow-2xl w-[650px] h-[300px] flex overflow-hidden animate-fadeIn"
-        >
+        <div class="bg-neutral-900 text-white rounded-2xl shadow-2xl w-[650px] h-[300px] flex overflow-hidden animate-fadeIn">
           <div class="w-[45%] bg-gradient-to-b flex items-center justify-center">
-            <label
-              class="cursor-pointer w-[250px] h-[250px] bg-neutral-800 rounded-xl flex items-center justify-center shadow-inner hover:scale-105 transition-transform duration-300"
-            >
-              <img
-                v-if="imagePreview"
-                :src="imagePreview"
-                class="w-full h-full object-cover rounded-xl"
-              />
-              <img
-                v-else
-                src="/images/icons/music.png"
-                alt="playlist"
-                class="w-20 h-20 opacity-90"
-              />
-              <input type="file" accept="image/*" style="display: none" @change="selectImage" />
-            </label>
-          </div>
 
+            <file-image-input v-model="imageFile">
+              <template #default="{ imageUrl }">
+                <img v-if="imageUrl" :src="imageUrl" alt="cover"/>
+              </template>
+            </file-image-input>
+
+          </div>
           <div class="w-[55%] p-6 flex flex-col justify-between">
             <h2 class="text-2xl font-bold mb-3">Create a playlist</h2>
 
@@ -90,6 +82,7 @@ defineExpose({ openModal })
                 required
                 class="rounded-xl bg-neutral-700 border-1 border-transparent focus:border-green-500 transition-colors px-3 py-2 text-sm text-white placeholder-neutral-400 outline-none w-full"
               />
+              
               <textarea
                 v-model="playlistDescription"
                 placeholder="Write an optional description"

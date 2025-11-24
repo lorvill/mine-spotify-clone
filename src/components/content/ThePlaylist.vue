@@ -5,10 +5,12 @@ import { useTrackStore } from '@/stores/trackStore.ts'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
+import FileImageInput from '@/components/ui/FileImageInput.vue'
 
 const route = useRoute()
 const trackStore = useTrackStore()
 const { data } = usePlaylistQuery()
+const imageFile = ref<File | null>(null)
 
 console.log('data:', data.value)
 console.log('route.params.id:', route.params.id)
@@ -36,11 +38,7 @@ const hoverIndex = ref<number | null>(null)
   <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
     <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#6143b5]/90 to-[#3f2b78]/70">
       <div class="flex items-end gap-6 mb-0">
-        <img
-          src="https://misc.scdn.co/liked-songs/liked-songs-300.jpg"
-          alt="cover"
-          class="w-50 h-50 rounded-md shadow-2xl shadow-black/70"
-        />
+        <file-image-input v-model="imageFile" />
         <div class="flex flex-col gap-4">
           <p class="text-white font-light text-sm">Playlist</p>
           <h2 class="text-[70px] font-bold text-white leading-none">{{ currentName }}</h2>

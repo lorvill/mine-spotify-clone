@@ -20,7 +20,7 @@ console.log(likedTracksQuery.data.value)
         <img
           src="https://misc.scdn.co/liked-songs/liked-songs-300.jpg"
           alt="cover"
-          class="w-50 h-50 rounded-md shadow-2xl shadow-black/70"
+          class="w-[200px] h-[200px] rounded-md shadow-2xl shadow-black/70"
         />
         <div class="flex flex-col gap-4">
           <p class="text-white font-light">Private Playlist</p>
