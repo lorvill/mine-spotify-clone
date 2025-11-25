@@ -32,10 +32,11 @@ const cards = computed(() => {
 </script>
 
 <template>
-  <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
+  <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col bg-black">
 
-    <section class="flex-1 overflow-y-auto px-4 pt-6 pb-6">
-      <div class="flex gap-3 ml-15">
+    <section class="flex-1 overflow-y-auto px-6 pt-6 pb-10 space-y-6">
+
+      <div class="flex gap-3">
         <Button
           v-for="category in categories"
           :key="category.id"

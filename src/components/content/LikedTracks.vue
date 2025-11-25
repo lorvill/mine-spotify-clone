@@ -103,4 +103,3 @@ console.log(likedTracksQuery.data.value)
     </transition>
   </div>
 </template>
-<style scoped></style>

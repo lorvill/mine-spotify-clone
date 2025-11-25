@@ -12,31 +12,25 @@ const trackStore = useTrackStore()
 const { data } = usePlaylistQuery()
 const imageFile = ref<File | null>(null)
 
-console.log('data:', data.value)
+console.log('data:', data)
 console.log('route.params.id:', route.params.id)
 // Получаем ID из URL
 const playlistId = computed(() => route.params.id)
 
-// Находим нужный плейлист
 const currentPlaylist = computed(() => {
   if (!data.value || !playlistId.value) return null
-  return data.value.find(p => p.id === playlistId.value)
+
+  return data.value.find(p => String(p.id) === String(playlistId.value)) || null
 })
 
-// Имя плейлиста
 const currentName = computed(() => {
-  return currentPlaylist.value?.name ?? 'Playlist'
+  return currentPlaylist.value?.name ?? ''
 })
-
-console.log(playlistId.value)
-
-console.log(currentPlaylist.value)
-const hoverIndex = ref<number | null>(null)
 </script>
 
 <template>
   <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
-    <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#6143b5]/90 to-[#3f2b78]/70">
+    <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#737373]/90 to-[#4a4a4a]/70">
       <div class="flex items-end gap-6 mb-0">
         <file-image-input v-model="imageFile" />
         <div class="flex flex-col gap-4">
@@ -46,7 +40,7 @@ const hoverIndex = ref<number | null>(null)
       </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-8 pt-0 bg-gradient-to-b from-[#27234d]/80 to-[#594d78]/10">
+    <div class="flex-1 overflow-y-auto p-8 pt-0 bg-gradient-to-b from-[#303030]/80 to-[#1c1c1c]/10">
       <div class="p-5 pl-0 flex items-center gap-4">
         <button
           class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center hover:scale-105 transition-transform duration-200 shadow-md cursor-pointer"

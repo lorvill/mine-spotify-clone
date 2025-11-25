@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 
 export function usePlaylistQuery() {
   return useQuery({
-    queryKey: ['playlists'],
+    queryKey: ['playlist'],
     queryFn: fetchPlaylists,
     placeholderData: keepPreviousData,
   })

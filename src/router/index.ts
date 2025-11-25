@@ -26,7 +26,7 @@ const router = createRouter({
     },
     {
       path: '/playlist/:id',
-      name: 'create-playlist',
+      name: 'playlist',
       component: PlaylistView,
     },
     {

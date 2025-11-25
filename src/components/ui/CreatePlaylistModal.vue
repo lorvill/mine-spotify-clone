@@ -47,7 +47,6 @@ function createPlaylist() {
       console.error('Error creating playlist:', error)
     },
   })
-  closeModal()
 }
 
 defineExpose({ openModal })
@@ -82,7 +81,7 @@ defineExpose({ openModal })
                 required
                 class="rounded-xl bg-neutral-700 border-1 border-transparent focus:border-green-500 transition-colors px-3 py-2 text-sm text-white placeholder-neutral-400 outline-none w-full"
               />
-              
+
               <textarea
                 v-model="playlistDescription"
                 placeholder="Write an optional description"

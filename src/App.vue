@@ -8,9 +8,9 @@ import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
   <TheSidebar />
   <TopNavigation />
 
-  <router-view v-slot="{ Component }">
+  <router-view v-slot="{ Component, route }">
     <transition name="fade" mode="out-in">
-      <component :is="Component" />
+      <component :is="Component" :key="route.params.id" />
     </transition>
   </router-view>
 

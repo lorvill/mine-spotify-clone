@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, useRoute } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
 
 const route = useRoute()
-const modalWindow = ref()
-
+const modalWindow = useTemplateRef('modalWindow')
 const { data } = usePlaylistQuery()
 
 function isActive(path: string) {
@@ -59,7 +58,7 @@ console.log(data)
 
       <button
         class="flex items-center gap-3 mb-4 hover:grayscale hover:brightness-150 transition duration-30 cursor-pointer"
-        @click="modalWindow.openModal()"
+        @click="modalWindow?.openModal()"
       >
         <img width="30" src="/images/icons/playlist-inactive.png" />
         <span class="font-medium text-[15px] text-gray-400">Create Playlist</span>
@@ -78,10 +77,7 @@ console.log(data)
     <hr class="border-b border-b-gray-700 mt-2" />
 
     <ul class="mt-10" v-if="data">
-      <li v-for="playlist in data ?? []"
-          :key="playlist.id"
-          class="text-white"
-      >
+      <li v-for="playlist in data ?? []" :key="playlist.id" class="text-neutral-300 text-[15px] hover:text-white mb-2 cursor-pointer">
         <RouterLink :to="`/playlist/${playlist.id}`">
           {{ playlist.name }}
         </RouterLink>
