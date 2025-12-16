@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, useRoute } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
-import { ref, useTemplateRef } from 'vue'
+import { useTemplateRef } from 'vue'
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
 
 const route = useRoute()

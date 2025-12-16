@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import AuthModal from '@/components/ui/AuthModal.vue'
+import { useTemplateRef } from 'vue'
+const modalWindow = useTemplateRef('modalWindow')
 </script>
 
 <template>
@@ -14,10 +17,12 @@
     </form>
 
     <button
+      @click="modalWindow?.openModal()"
       type="button"
       class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
     >
-      Log in
+      <span>Log in</span>
+      <AuthModal ref="modalWindow"/>
     </button>
   </section>
 </template>
