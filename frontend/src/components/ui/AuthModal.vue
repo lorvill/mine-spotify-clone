@@ -8,27 +8,53 @@ const mode = ref<'sign in' | 'sign up'>('sign in')
 const form = ref({
   email: '',
   password: '',
-  confirmPassword: '',
 })
 
 const isRegister = computed(() => mode.value === 'sign up')
-
 const closeModal = () => (open.value = false)
 const openModal = () => (open.value = true)
-
 const outOfModal = (event: MouseEvent | TouchEvent) => {
   if (event.target === event.currentTarget) closeModal()
 }
 
 const switchMode = () => {
   mode.value = isRegister.value ? 'sign in' : 'sign up'
-  form.value.confirmPassword = ''
 }
 
-const submit = () => {
-  if (isRegister.value && form.value.password !== form.value.confirmPassword) {
-    alert('Passwords do not match')
-    return
+async function authentication() {
+  if (
+    !form.value.email ||
+    !form.value.password ||
+    form.value.password.length < 6 ||
+    !form.value.email.includes('@')
+  ) return
+
+  try {
+    const response = await fetch(
+      isRegister.value ? '/api/auth/register' : '/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: form.value.email,
+          password: form.value.password,
+        }),
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error('Auth failed')
+    }
+
+    const data = await response.json()
+    localStorage.setItem('token', data.token)
+
+    closeModal()
+    form.value.email = ''
+    form.value.password = ''
+
+  } catch (err) {
+    console.error(err)
   }
 }
 
@@ -52,22 +78,13 @@ defineExpose({ openModal })
             </h2>
           </div>
 
-          <form @submit.prevent="submit" class="flex flex-col gap-4">
+          <form @submit.prevent="authentication" class="flex flex-col gap-4">
             <input v-model="form.email" type="email" placeholder="Email" required class="input" />
 
             <input
               v-model="form.password"
               type="password"
               placeholder="Password"
-              required
-              class="input"
-            />
-
-            <input
-              v-if="isRegister"
-              v-model="form.confirmPassword"
-              type="password"
-              placeholder="Confirm password"
               required
               class="input"
             />
