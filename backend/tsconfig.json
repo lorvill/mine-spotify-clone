@@ -1,14 +1,30 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    /* Базовые настройки */
+    "target": "ES2023",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "./dist",
     "rootDir": "./src",
+
+    /* Строгая проверка типов (рекомендуется для Prisma) */
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    /* Совместимость */
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    /* Эмиссия файлов (важно для работы npm run start) */
+    "noEmit": false,
+    "sourceMap": true,
+    "removeComments": true,
+
+    /* Важно для Prisma: чтобы она корректно генерировала типы */
+    "declaration": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,24 +1,34 @@
 import express from "express";
 import 'dotenv/config'
-import { pool } from './database.js'
 import authRoutes from './routes/auth-routes.js'
+import session from 'express-session'
+import { createClient } from 'redis'
+import { RedisStore } from 'connect-redis'
 
 const app = express();
 const PORT = process.env.PORT || 5003;
-app.use(express.json());
+const client = createClient({
+  url: process.env.REDIS_CLIENT, // это адрес Redis-сервера
+})
 
-async function testConnection() {
-  try {
-    const res = await pool.query('SELECT 1')
-    console.log('Соединение с PostgreSQL установлено:', res.rows)
-    await pool.end()
-  } catch (err) {
-    console.error('Ошибка соединения с PostgreSQL:', err)
+await client.connect().catch((err) => console.error()) // реальное подключение к Redis (если он упадет - сессии прекратят работу)
+
+const redisStore = new RedisStore({ client: client }) // создаем хранилище редис, тем самым говорим express-session что когда нужно сохранить или прочесть сессию то нужно идти сюда, в хранилище
+
+app.use(session({ // мидлвар, выполняется при каждом запросе
+  store: redisStore,
+  secret: process.env.REDIS_SECRET!,
+  resave: false,
+  saveUninitialized: false,
+  name: 'sessionId',
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24
   }
-}
+}))
 
-testConnection()
-
+app.use(express.json());
 app.use('/api/auth', authRoutes)
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
