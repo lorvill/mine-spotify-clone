@@ -1,7 +1,17 @@
 <script setup lang="ts">
 import AuthModal from '@/components/ui/AuthModal.vue'
 import { useTemplateRef } from 'vue'
+import { useAuthStore } from '@/stores/authStore.ts'
+import router from '@/router'
+
 const modalWindow = useTemplateRef('modalWindow')
+const authStore = useAuthStore()
+
+const logout = async () => {
+  await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+  authStore.clearAuthenticated()
+}
+router.push('/')
 </script>
 
 <template>
@@ -9,21 +19,28 @@ const modalWindow = useTemplateRef('modalWindow')
     <div class="w-[240px] hidden md:block"></div>
 
     <form class="spotify-search flex-1 mx-4 md:mx-0">
-      <input
-        name="s"
-        type="search"
-        placeholder="What do you want to play?"
-      />
+      <input name="s" type="search" placeholder="What do you want to play?" />
     </form>
 
     <button
+      v-if="!authStore.isLoggedIn"
       @click="modalWindow?.openModal()"
       type="button"
       class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
     >
-      <span>Log in</span>
-      <AuthModal ref="modalWindow"/>
+      Log in
     </button>
+
+    <button
+      v-else
+      type="button"
+      @click="logout"
+      class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
+    >
+      Log out
+    </button>
+
+    <AuthModal ref="modalWindow" />
   </section>
 </template>
 
@@ -39,7 +56,10 @@ const modalWindow = useTemplateRef('modalWindow')
   color: #fff;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease, width 0.3s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    width 0.3s ease;
 }
 
 .spotify-search input::placeholder {
