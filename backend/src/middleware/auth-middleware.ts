@@ -1,3 +1,4 @@
+
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
@@ -36,3 +37,4 @@ function authMiddleware(
 }
 
 export default authMiddleware
+

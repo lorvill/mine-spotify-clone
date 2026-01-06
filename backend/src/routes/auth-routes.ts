@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
 
   } catch (err) {
     return res.status(401).json({ message: "Invalid email or password" })
-}
+  }
 })
 
 router.get('/me', authMiddleware, (req, res) => {
@@ -48,7 +48,6 @@ router.post('/logout', async (req, res) => {
     if (err) res.status(500).send('Error logging out')
 
     res.clearCookie('sessionId')
-    // res.redirect('/')
     return res.status(200).json({ message: 'Logged out' })
   })
 })
