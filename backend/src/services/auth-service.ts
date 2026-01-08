@@ -18,7 +18,6 @@ export const authService = {
     })
 
     return user
-
     // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: '24h' })
     //
     // return { token }
@@ -39,7 +38,6 @@ export const authService = {
     }
 
     return user
-
     // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: '24h' })
     //
     // return { token }

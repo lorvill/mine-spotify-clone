@@ -48,7 +48,6 @@ router.post('/logout', async (req, res) => {
     if (err) res.status(500).send('Error logging out')
 
     res.clearCookie('sessionId')
-    // res.redirect('/')
     return res.status(200).json({ message: 'Logged out' })
   })
 })
