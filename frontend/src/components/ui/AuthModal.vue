@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/authStore.ts'
+import { ref, computed } from 'vue'
+import { useAuthentication } from '@/composables/useAuthentication.ts'
 
-const authStore = useAuthStore()
+const { login, register } = useAuthentication()
 const open = ref<boolean>(false)
 const mode = ref<'sign in' | 'sign up'>('sign in')
 const form = ref({
   email: '',
   password: '',
+  user_name: '',
+  password_confirmation: '',
+  date_of_birth: '',
 })
 
 const isRegister = computed(() => mode.value === 'sign up')
@@ -32,55 +35,17 @@ async function authentication() {
     return
 
   try {
-    const response = await fetch(isRegister.value ? '/api/auth/register' : '/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', credentials: 'include' },
-      body: JSON.stringify({
-        email: form.value.email,
-        password: form.value.password,
-      }),
-    })
-
-    if (!response.ok) throw new Error('Auth failed')
-
-    const data = await response.json()
-    authStore.setAuthenticated(data.user)
+    isRegister.value ? await register(form.value) : await login(form.value)
 
     closeModal()
     form.value.email = ''
     form.value.password = ''
-
-    // localStorage.setItem('token', data.token) - using jwt
-  } catch (err) {
-    console.error(err)
+  } catch (e) {
+    console.error(e)
   }
 }
 
-async function currentUser() {
-  // const token = localStorage.getItem('token')
-  // if (!token) return
-
-  try {
-    const response = await fetch('/api/auth/me', {
-      // headers: { Authorization: `Bearer ${token}` }, - using jwt
-      credentials: 'include',
-    })
-
-    if (!response.ok) throw new Error('Failed to fetch current user')
-
-    const data = await response.json()
-    authStore.setAuthenticated(data)
-    console.log('Current user ID:', data.userId)
-  } catch (err) {
-    authStore.clearAuthenticated()
-  }
-}
-
-onMounted(() => {
-  currentUser()
-})
-
-defineExpose({ openModal, isRegister })
+defineExpose({ openModal })
 </script>
 
 <template>

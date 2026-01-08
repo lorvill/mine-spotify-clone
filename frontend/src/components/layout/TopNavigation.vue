@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import AuthModal from '@/components/ui/AuthModal.vue'
 import { useTemplateRef } from 'vue'
-import { useAuthStore } from '@/stores/authStore.ts'
-import router from '@/router'
+import { useAuthentication } from '@/composables/useAuthentication.ts'
 
 const modalWindow = useTemplateRef('modalWindow')
-const authStore = useAuthStore()
+const { logout, isAuthenticated } = useAuthentication()
 
-const logout = async () => {
-  await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
-  authStore.clearAuthenticated()
-}
-router.push('/')
 </script>
 
 <template>
@@ -23,7 +17,7 @@ router.push('/')
     </form>
 
     <button
-      v-if="!authStore.isLoggedIn"
+      v-if="!isAuthenticated"
       @click="modalWindow?.openModal()"
       type="button"
       class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
@@ -34,7 +28,7 @@ router.push('/')
     <button
       v-else
       type="button"
-      @click="logout"
+      @click="logout()"
       class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
     >
       Log out
