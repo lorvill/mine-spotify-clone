@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import AuthModal from '@/components/ui/AuthModal.vue'
-import { useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import { useAuthentication } from '@/composables/useAuthentication.ts'
 
 const modalWindow = useTemplateRef('modalWindow')
-const { logout, isAuthenticated } = useAuthentication()
+const { logout, isAuthenticated, currentUser } = useAuthentication()
 
+const username = computed(() => currentUser.value.username)
+
+console.log(username)
 </script>
 
 <template>
@@ -16,6 +19,8 @@ const { logout, isAuthenticated } = useAuthentication()
       <input name="s" type="search" placeholder="What do you want to play?" />
     </form>
 
+    <span v-if="currentUser" class="pr-5">Hello, {{ username }}!</span>
+
     <button
       v-if="!isAuthenticated"
       @click="modalWindow?.openModal()"
@@ -25,14 +30,15 @@ const { logout, isAuthenticated } = useAuthentication()
       Log in
     </button>
 
-    <button
-      v-else
-      type="button"
-      @click="logout()"
-      class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
-    >
-      Log out
-    </button>
+    <div v-else class="flex items-center justify-between">
+      <button
+        type="button"
+        @click="logout()"
+        class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
+      >
+        Log out
+      </button>
+    </div>
 
     <AuthModal ref="modalWindow" />
   </section>

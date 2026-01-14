@@ -1,45 +1,61 @@
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import { prisma } from '../prisma-client.js'
+import { Registry } from '../types/auth.js'
 
 export const authService = {
-  async register(email: string, password: string) {
+  async register(userData: Registry) {
+    const { email, password, username } = userData
+
     const existingUser = await prisma.user.findUnique({ where: { email } })
-    if (existingUser) {
-      throw new Error('User already exists')
-    }
+    if (existingUser) throw new Error('User already exists')
+
+    const existingName = await prisma.user.findUnique({ where: { username } })
+    if (existingName) throw new Error('User already exists')
 
     const hashedPassword = await bcrypt.hash(password, 12)
+
     const user = await prisma.user.create({
       data: {
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        username,
       }
     })
 
-    return user
-    // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: '24h' })
-    //
-    // return { token }
+    const { password: _, ...userWithoutPassword } = user
+    return userWithoutPassword
   },
 
-  async login(email: string, password: string) {
-    const user = await prisma.user.findUnique({
-      where: { email }
+  async login(identity: string, password: string) {
+    const user = await prisma.user.findFirst({
+      where: { OR: [{ email: identity }, { username: identity }] },
     })
 
     if (!user) {
-      throw new Error('Incorrect credentials')
+      throw new Error('User not found')
     }
 
     const isMatched = await bcrypt.compare(password, user.password)
     if (!isMatched) {
-      throw new Error('Incorrect password')
+      throw new Error('Incorrect credentials')
     }
 
-    return user
-    // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: '24h' })
-    //
-    // return { token }
+    const { password:_, ...userWithoutPassword } = user
+    return userWithoutPassword
+  },
+
+  async getMe(userId: number | undefined) {
+    const currentUser = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+      }
+    })
+
+    return currentUser
   }
 }

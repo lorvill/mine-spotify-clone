@@ -1,3 +1,5 @@
+import type { LoginCredentials } from '@/types/loginCredentials.ts'
+
 export const apiAuth = {
   async register(credentials: object) {
     const response = await fetch('/api/auth/register', {
@@ -11,12 +13,12 @@ export const apiAuth = {
     return response.json()
   },
 
-  async login(credentials: object) {
+  async login(credentials: LoginCredentials) {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(credentials)
     })
 
     if (!response.ok) throw new Error('Login failed')
@@ -24,10 +26,17 @@ export const apiAuth = {
   },
 
   async getUser() {
-    const response = await fetch('/api/auth/me', { credentials: 'include' })
+    try {
+      const response = await fetch('/api/auth/me', { credentials: 'include' })
 
-    if (!response.ok) throw new Error('Not authorized')
-    return response.json()
+      if (!response.ok) throw new Error('Not authorized')
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error(error)
+
+    }
+
   },
 
   async logout() {
