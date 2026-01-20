@@ -12,6 +12,34 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now()) @map("created_at")
+  username  String   @unique
 
   @@map("users")
+}
+
+model Podcast {
+  id       Int    @id @default(autoincrement())
+  title    String @unique
+  subtitle String
+  image    String
+
+  @@map("podcasts")
+}
+
+model RadioStation {
+  id       Int    @id @default(autoincrement())
+  title    String @unique
+  subtitle String
+  image    String
+
+  @@map("radio_stations")
+}
+
+model NewRelease {
+  id       Int    @id @default(autoincrement())
+  title    String @unique
+  subtitle String
+  image    String
+
+  @@map("new_releases")
 }
