@@ -1,4 +1,4 @@
-export interface Registry {
+export interface Registration {
   email: string;
   password: string;
   username: string;
