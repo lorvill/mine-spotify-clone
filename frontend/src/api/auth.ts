@@ -33,10 +33,8 @@ export const apiAuth = {
       const data = await response.json()
       return data
     } catch (error) {
-      console.error(error)
-
+      throw new Error('Not authorized')
     }
-
   },
 
   async logout() {
