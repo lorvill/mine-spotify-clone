@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import AuthModal from '@/components/ui/AuthModal.vue'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import { useAuthentication } from '@/composables/useAuthentication.ts'
 
 const modalWindow = useTemplateRef('modalWindow')
 const { logout, isAuthenticated, currentUser } = useAuthentication()
-
 const username = computed(() => currentUser.value.username)
-
-console.log(username)
 </script>
 
 <template>
@@ -25,7 +22,17 @@ console.log(username)
       v-if="!isAuthenticated"
       @click="modalWindow?.openModal()"
       type="button"
-      class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
+      class="
+      ml-auto
+      rounded-2xl
+      bg-neutral-300
+      py-1 w-20
+      hover:bg-green-500
+      transition duration-200
+      cursor-pointer
+      font-medium
+      text-black
+      hover:text-neutral-700"
     >
       Log in
     </button>
@@ -34,7 +41,17 @@ console.log(username)
       <button
         type="button"
         @click="logout()"
-        class="ml-auto rounded-2xl bg-neutral-300 py-1 w-20 hover:bg-green-500 transition duration-200 cursor-pointer font-medium text-black hover:text-neutral-700"
+        class="
+        ml-auto
+        rounded-2xl
+        bg-neutral-300
+        py-1 w-20
+        hover:bg-green-500
+        transition duration-200
+        cursor-pointer
+        font-medium
+        text-black
+        hover:text-neutral-700"
       >
         Log out
       </button>

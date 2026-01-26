@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { prisma } from '../prisma-client.js'
-import { Registration } from '../types/auth.js'
+import { Login, Registration } from '../types/auth.js'
 
 export const authService = {
   async register(userData: Registration) {
@@ -26,26 +26,26 @@ export const authService = {
     return userWithoutPassword
   },
 
-  async login(identity: string, password: string) {
+  async login(userData: Login) {
+    const { identity, password } = userData
+
     const user = await prisma.user.findFirst({
-      where: { OR: [{ email: identity }, { username: identity }] },
+      where: {
+        OR: [{ email: identity }, { username: identity }]
+      },
     })
 
-    if (!user) {
-      throw new Error('User not found')
-    }
+    if (!user) throw new Error('User not found')
 
     const isMatched = await bcrypt.compare(password, user.password)
-    if (!isMatched) {
-      throw new Error('Incorrect credentials')
-    }
+    if (!isMatched) throw new Error('Incorrect credentials')
 
     const { password:_, ...userWithoutPassword } = user
     return userWithoutPassword
   },
 
   async getMe(userId: number | undefined) {
-    const currentUser = await prisma.user.findUnique({
+    return prisma.user.findUnique({
       where: {
         id: userId,
       },
@@ -55,7 +55,5 @@ export const authService = {
         username: true,
       }
     })
-
-    return currentUser
   }
 }

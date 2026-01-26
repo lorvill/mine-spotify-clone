@@ -10,13 +10,6 @@ const app = express();
 const PORT = process.env.PORT || 5003;
 
 app.use(express.json());
-// app.use((req, res, next) => {
-//   console.log(`\n📨 ${req.method} ${req.url}`)
-//   console.log('Body:', req.body)
-//   next()
-// })
-//
-// Redis connection with better error handling
 
 const client = createClient({
   url: process.env.REDIS_CLIENT,
@@ -25,20 +18,15 @@ const client = createClient({
   }
 })
 
-client.on('error', (err) => logger.error({ err }, 'Redis Client Error:'))
-client.on('connect', () => logger.info('Redis connecting...'))
-client.on('ready', () => logger.info('Redis ready!'))
+client.on('error', (err) => logger.error({ err }, 'Redis Client Error'))
+client.on('connect', () => logger.debug('Redis connecting'))
+client.on('ready', () => logger.debug('Redis ready'))
 
 try {
   await client.connect()
-  logger.info('Redis connected successfully')
-
   await client.set('test', 'hello')
-  const val = await client.get('test')
-  logger.info({ val },'Redis test value:')
 } catch (err) {
   logger.error({ err }, 'Redis connection failed:')
-  logger.info('Continuing without Redis - sessions will use memory store')
 }
 
 const redisStore = new RedisStore({ client: client })
@@ -58,4 +46,4 @@ app.use(session({
 
 app.use('/api/auth', authRoutes)
 
-app.listen(PORT, () => console.log(`✅ Server listening on http://localhost:${PORT}`));
+app.listen(PORT, () => logger.debug(`Server listening on http://localhost:${PORT}`));
