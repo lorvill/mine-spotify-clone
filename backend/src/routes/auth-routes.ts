@@ -1,55 +1,50 @@
 import express from "express"
-import { authService } from '../services/auth-service.js'
 import authMiddleware from '../middleware/auth-middleware.js'
+import { validateMiddleware } from '../middleware/validation-middleware.js'
+import { registerSchema, loginSchema } from '../schemas/auth-schema.js'
+import { authController } from '../controllers/auth-controller.js'
 
 const router = express.Router()
+// router.post("/register", async (req, res) => {
+//  console.log(req.body)
+//   const { email, password, username } = req.body
+//
+//   if (!email || !password) {
+//     return res.status(400).send("Email and password is required")
+//   }
+//
+//   try {
+//     const user = await authService.register({ email, password, username })
+//     req.session.userId = user.id
+//
+//     // IMPORTANT: Save session before responding
+//     req.session.save((err) => {
+//       if (err) {
+//         console.error('Session save error:', err)
+//         return res.status(500).json({ message: "Session error" })
+//       }
+//
+//       console.log('User registered successfully:', user.id)
+//       res.status(201).json({
+//         id: user.id,
+//         email: user.email,
+//         username: user.username,
+//       })
+//     })
+//   } catch (err) {
+//     console.error('Registration error:', err)
+//     return res.status(400).json({
+//       message: err instanceof Error ? err.message : "Registration failed"
+//     })
+//   }
+// })
 
-router.post("/register", async (req, res) => {
-  const { email, password } = req.body
-  if (!email || !password) {
-    return res.status(400).send("Email and password is required")
-  }
+router.post("/register", validateMiddleware(registerSchema), authController.register)
 
-  try {
-    const user = await authService.register(email, password)
+router.post("/login", validateMiddleware(loginSchema), authController.login )
 
-    req.session.userId = user.id
-    res.status(201)
+router.get('/me', authMiddleware, authController.getUser)
 
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid email or password" })
-  }
-})
-
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body
-
-  if (!email || !password) {
-    return res.status(400).send("Email and password is required")
-  }
-
-  try {
-    const user = await authService.login(email, password)
-
-    req.session.userId = user.id
-    res.json(user)
-
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid email or password" })
-}
-})
-
-router.get('/me', authMiddleware, (req, res) => {
-  res.json({ userId: req.userId })
-})
-
-router.post('/logout', async (req, res) => {
-  req.session.destroy((err) => {
-    if (err) res.status(500).send('Error logging out')
-
-    res.clearCookie('sessionId')
-    return res.status(200).json({ message: 'Logged out' })
-  })
-})
+router.post('/logout', authController.logout)
 
 export default router

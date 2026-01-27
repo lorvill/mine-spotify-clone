@@ -19,13 +19,17 @@
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/vue-query": "^5.85.6",
     "@tanstack/vue-query-devtools": "^5.91.0",
+    "@vee-validate/zod": "^4.15.1",
+    "@vueuse/core": "^14.1.0",
     "pinia": "^3.0.3",
     "primevue": "^4.3.9",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4.1.12",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.18",
     "vue-material-design-icons": "^5.3.1",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
