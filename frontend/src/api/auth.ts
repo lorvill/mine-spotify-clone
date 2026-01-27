@@ -1,7 +1,8 @@
 import type { LoginCredentials } from '@/types/loginCredentials.ts'
+import type { RegisterCredentials } from '@/types/registerCredentials.ts'
 
 export const apiAuth = {
-  async register(credentials: Record<string, any>) {
+  async register(credentials: RegisterCredentials) {
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
