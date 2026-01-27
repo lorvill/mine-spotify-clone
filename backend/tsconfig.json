@@ -23,7 +23,8 @@
     "removeComments": true,
 
     /* Важно для Prisma: чтобы она корректно генерировала типы */
-    "declaration": true
+    "declaration": true,
+
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { apiAuth } from '@/api/auth.ts'
 import { computed } from 'vue'
-import router from '@/router'
 
 export function useAuthentication()  {
   const { login, register, getUser, logout } = apiAuth
@@ -32,7 +31,6 @@ export function useAuthentication()  {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ['user'] })
-      // router.push('/')
     }
   })
 

@@ -1,49 +1,56 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useAuthentication } from '@/composables/useAuthentication.ts'
+import { Field, useField, useForm } from 'vee-validate'
+import { validationSchema } from '@/modules/validation-schema.ts'
 
 const { login, register } = useAuthentication()
 const open = ref<boolean>(false)
 const mode = ref<'sign in' | 'sign up'>('sign in')
-const form = ref({
-  email: '',
-  password: '',
-  user_name: '',
-  password_confirmation: '',
-  date_of_birth: '',
+const isRegister = computed(() => mode.value === 'sign up')
+
+const { handleSubmit, errors, resetForm } = useForm({
+  validationSchema,
 })
 
-const isRegister = computed(() => mode.value === 'sign up')
-const closeModal = () => (open.value = false)
-const openModal = () => (open.value = true)
+const { value: email } = useField<string>('email')
+const { value: username } = useField<string>('username')
+const { value: identity } = useField<string>('identity')
+const { value: password } = useField<string>('password')
+const { value: confirmPassword } = useField<string>('confirmPassword')
+const { value: rememberMe } = useField<boolean>('rememberMe')
 
-const outOfModal = (event: MouseEvent | TouchEvent) => {
-  if (event.target === event.currentTarget) closeModal()
+const closeModal = () => {
+  open.value = false
+  resetForm()
 }
+const openModal = () => (open.value = true)
 
 const switchMode = () => {
   mode.value = isRegister.value ? 'sign in' : 'sign up'
+  resetForm()
 }
 
-async function authentication() {
-  if (
-    !form.value.email ||
-    !form.value.password ||
-    form.value.password.length < 6 ||
-    !form.value.email.includes('@')
-  )
-    return
-
+const onSubmit = handleSubmit(async (values) => {
   try {
-    isRegister.value ? await register(form.value) : await login(form.value)
-
+    if (isRegister.value) {
+      await register({
+        email: values.email!,
+        username: values.username!,
+        password: values.password,
+      })
+    } else {
+      await login({
+        identity: values.identity!,
+        password: values.password,
+        rememberMe: values.rememberMe,
+      })
+    }
     closeModal()
-    form.value.email = ''
-    form.value.password = ''
   } catch (e) {
-    console.error(e)
+    throw new Error('Error authentication')
   }
-}
+})
 
 defineExpose({ openModal })
 </script>
@@ -53,7 +60,7 @@ defineExpose({ openModal })
     <transition name="fade">
       <div
         v-if="open"
-        @click.self="outOfModal"
+        @click.self="closeModal"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
       >
         <div
@@ -65,16 +72,81 @@ defineExpose({ openModal })
             </h2>
           </div>
 
-          <form @submit.prevent="authentication" class="flex flex-col gap-4">
-            <input v-model="form.email" type="email" placeholder="Email" required class="input" />
+          <form @submit.prevent="onSubmit" class="flex flex-col gap-4">
+            <div v-if="!isRegister" class="flex flex-col gap-4">
+              <div class="flex flex-col gap-1">
+                <Field
+                  name="identity"
+                  v-model="identity"
+                  type="text"
+                  placeholder="Email or Username"
+                  class="input"
+                />
+                <span v-if="errors.identity" class="text-xs text-red-500 ml-1">{{
+                  errors.identity
+                }}</span>
+              </div>
 
-            <input
-              v-model="form.password"
-              type="password"
-              placeholder="Password"
-              required
-              class="input"
-            />
+              <div class="flex flex-col gap-1">
+                <Field
+                  name="password"
+                  v-model="password"
+                  type="password"
+                  placeholder="Password"
+                  class="input"
+                />
+                <span v-if="errors.password" class="text-xs text-red-500 ml-1">{{
+                  errors.password
+                }}</span>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                  <input v-model="rememberMe" type="checkbox" class="checkbox" />
+                  <span>Remember me</span>
+                </label>
+
+                <span class="text-sm text-gray-400 hover:text-white cursor-pointer">
+                  Forgot a password?
+                </span>
+              </div>
+            </div>
+
+            <div v-else class="flex flex-col gap-4">
+              <div class="flex flex-col gap-1">
+                <Field name="email" v-model="email" type="email" placeholder="E-mail" class="input" />
+                <span v-if="errors.email" class="text-xs text-red-500 ml-1">{{
+                  errors.email
+                }}</span>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <Field name="username" v-model="username" placeholder="Username" type="text" class="input" />
+                <span v-if="errors.username" class="text-xs text-red-500 ml-1">{{
+                  errors.username
+                }}</span>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <Field name="password" v-model="password" type="password" placeholder="Password" class="input" />
+                <span v-if="errors.password" class="text-xs text-red-500 ml-1">{{
+                  errors.password
+                }}</span>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <Field
+                  name="confirmPassword"
+                  v-model="confirmPassword"
+                  placeholder="Confirm password"
+                  type="password"
+                  class="input"
+                />
+                <span v-if="errors.confirmPassword" class="text-xs text-red-500 ml-1">{{
+                  errors.confirmPassword
+                }}</span>
+              </div>
+            </div>
 
             <button
               type="submit"
@@ -88,7 +160,11 @@ defineExpose({ openModal })
             <span>
               {{ isRegister ? 'Already have an account?' : 'No account?' }}
             </span>
-            <button @click="switchMode" class="ml-1 text-white underline">
+
+            <button
+              @click="switchMode"
+              class="ml-1 text-white underline cursor-pointer hover:text-green-500"
+            >
               {{ isRegister ? 'Sign in' : 'Sign up' }}
             </button>
           </div>
