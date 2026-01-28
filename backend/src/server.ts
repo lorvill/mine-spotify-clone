@@ -5,6 +5,7 @@ import session from 'express-session'
 import { createClient } from 'redis'
 import { RedisStore } from 'connect-redis'
 import logger from './logger.js'
+import { errorHandler } from './middleware/error-handler.js'
 
 const app = express();
 const PORT = process.env.PORT || 5003;
@@ -19,8 +20,8 @@ const client = createClient({
 })
 
 client.on('error', (err) => logger.error({ err }, 'Redis Client Error'))
-client.on('connect', () => logger.debug('Redis connecting'))
-client.on('ready', () => logger.debug('Redis ready'))
+client.on('connect', () => logger.info('Redis connecting'))
+client.on('ready', () => logger.info('Redis ready'))
 
 try {
   await client.connect()
@@ -46,4 +47,6 @@ app.use(session({
 
 app.use('/api/auth', authRoutes)
 
-app.listen(PORT, () => logger.debug(`Server listening on http://localhost:${PORT}`));
+app.use(errorHandler)
+
+app.listen(PORT, () => logger.info(`Server listening on http://localhost:${PORT}`));

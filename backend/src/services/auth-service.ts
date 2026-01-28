@@ -1,16 +1,17 @@
 import bcrypt from 'bcryptjs'
 import { prisma } from '../prisma-client.js'
 import { Login, Registration } from '../types/auth.js'
+import { AppError, BadRequest } from '../errors/custom-errors.js'
 
 export const authService = {
   async register(userData: Registration) {
     const { email, password, username } = userData
 
     const existingUser = await prisma.user.findUnique({ where: { email } })
-    if (existingUser) throw new Error('User already exists')
+    if (existingUser) throw new AppError('User already exists')
 
     const existingName = await prisma.user.findUnique({ where: { username } })
-    if (existingName) throw new Error('User already exists')
+    if (existingName) throw new AppError('User already exists')
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
@@ -34,11 +35,10 @@ export const authService = {
         OR: [{ email: identity }, { username: identity }]
       },
     })
-
-    if (!user) throw new Error('User not found')
+    if (!user) throw new BadRequest('Incorrect credentials')
 
     const isMatched = await bcrypt.compare(password, user.password)
-    if (!isMatched) throw new Error('Incorrect credentials')
+    if (!isMatched) throw new BadRequest()
 
     const { password:_, ...userWithoutPassword } = user
     return userWithoutPassword

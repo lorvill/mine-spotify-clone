@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useAuthentication } from '@/composables/useAuthentication.ts'
-import { Field, useField, useForm } from 'vee-validate'
-import { validationSchema } from '@/modules/validation-schema.ts'
+import { Field, useForm } from 'vee-validate'
+import { registrationSchema, loginSchema } from '@/modules/validation-schema.ts'
+import type { LoginCredentials } from '@/types/loginCredentials.ts'
+import type { RegisterCredentials } from '@/types/registerCredentials.ts'
 
 const { login, register } = useAuthentication()
-const open = ref<boolean>(false)
+const open = ref(false)
 const mode = ref<'sign in' | 'sign up'>('sign in')
 const isRegister = computed(() => mode.value === 'sign up')
+type AuthFormValues = Partial<RegisterCredentials & LoginCredentials>
 
-const { handleSubmit, errors, resetForm } = useForm({
+const validationSchema = computed(() =>
+  isRegister.value ? registrationSchema('sign up') : loginSchema(),
+)
+
+const { handleSubmit, errors, resetForm } = useForm<AuthFormValues>({
   validationSchema,
 })
 
-const { value: email } = useField<string>('email')
-const { value: username } = useField<string>('username')
-const { value: identity } = useField<string>('identity')
-const { value: password } = useField<string>('password')
-const { value: confirmPassword } = useField<string>('confirmPassword')
-const { value: rememberMe } = useField<boolean>('rememberMe')
 
 const closeModal = () => {
   open.value = false
   resetForm()
 }
+
 const openModal = () => (open.value = true)
 
 const switchMode = () => {
@@ -34,21 +36,15 @@ const switchMode = () => {
 const onSubmit = handleSubmit(async (values) => {
   try {
     if (isRegister.value) {
-      await register({
-        email: values.email!,
-        username: values.username!,
-        password: values.password,
-      })
+      const data = values as RegisterCredentials
+      await register(data)
     } else {
-      await login({
-        identity: values.identity!,
-        password: values.password,
-        rememberMe: values.rememberMe,
-      })
+      const data = values as LoginCredentials
+      await login(data)
     }
     closeModal()
   } catch (e) {
-    throw new Error('Error authentication')
+    throw new Error('Authentication failed')
   }
 })
 
@@ -72,37 +68,25 @@ defineExpose({ openModal })
             </h2>
           </div>
 
-          <form @submit.prevent="onSubmit" class="flex flex-col gap-4">
+          <form @submit.prevent="onSubmit" class="flex flex-col gap-4" :key="mode">
             <div v-if="!isRegister" class="flex flex-col gap-4">
               <div class="flex flex-col gap-1">
-                <Field
-                  name="identity"
-                  v-model="identity"
-                  type="text"
-                  placeholder="Email or Username"
-                  class="input"
-                />
-                <span v-if="errors.identity" class="text-xs text-red-500 ml-1">{{
-                  errors.identity
-                }}</span>
+                <Field name="identity" type="text" placeholder="Email or Username" class="input" />
+                <span v-if="errors.identity" class="text-xs text-red-500 ml-1">
+                  {{ errors.identity }}
+                </span>
               </div>
 
               <div class="flex flex-col gap-1">
-                <Field
-                  name="password"
-                  v-model="password"
-                  type="password"
-                  placeholder="Password"
-                  class="input"
-                />
-                <span v-if="errors.password" class="text-xs text-red-500 ml-1">{{
-                  errors.password
-                }}</span>
+                <Field name="password" type="password" placeholder="Password" class="input" />
+                <span v-if="errors.password" class="text-xs text-red-500 ml-1">
+                  {{ errors.password }}
+                </span>
               </div>
 
               <div class="flex items-center justify-between">
                 <label class="flex items-center gap-2 cursor-pointer text-sm">
-                  <input v-model="rememberMe" type="checkbox" class="checkbox" />
+                  <Field name="rememberMe" type="checkbox" class="checkbox" />
                   <span>Remember me</span>
                 </label>
 
@@ -114,37 +98,36 @@ defineExpose({ openModal })
 
             <div v-else class="flex flex-col gap-4">
               <div class="flex flex-col gap-1">
-                <Field name="email" v-model="email" type="email" placeholder="E-mail" class="input" />
-                <span v-if="errors.email" class="text-xs text-red-500 ml-1">{{
-                  errors.email
-                }}</span>
+                <Field name="email" type="email" placeholder="E-mail" class="input" />
+                <span v-if="errors.email" class="text-xs text-red-500 ml-1">
+                  {{ errors.email }}
+                </span>
               </div>
 
               <div class="flex flex-col gap-1">
-                <Field name="username" v-model="username" placeholder="Username" type="text" class="input" />
-                <span v-if="errors.username" class="text-xs text-red-500 ml-1">{{
-                  errors.username
-                }}</span>
+                <Field name="username" placeholder="Username" type="text" class="input" />
+                <span v-if="errors.username" class="text-xs text-red-500 ml-1">
+                  {{ errors.username }}
+                </span>
               </div>
 
               <div class="flex flex-col gap-1">
-                <Field name="password" v-model="password" type="password" placeholder="Password" class="input" />
-                <span v-if="errors.password" class="text-xs text-red-500 ml-1">{{
-                  errors.password
-                }}</span>
+                <Field name="password" type="password" placeholder="Password" class="input" />
+                <span v-if="errors.password" class="text-xs text-red-500 ml-1">
+                  {{ errors.password }}
+                </span>
               </div>
 
               <div class="flex flex-col gap-1">
                 <Field
                   name="confirmPassword"
-                  v-model="confirmPassword"
                   placeholder="Confirm password"
                   type="password"
                   class="input"
                 />
-                <span v-if="errors.confirmPassword" class="text-xs text-red-500 ml-1">{{
-                  errors.confirmPassword
-                }}</span>
+                <span v-if="errors.confirmPassword" class="text-xs text-red-500 ml-1">
+                  {{ errors.confirmPassword }}
+                </span>
               </div>
             </div>
 

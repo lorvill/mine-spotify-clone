@@ -16,7 +16,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-
+    "resolveJsonModule": true,
     /* Эмиссия файлов (важно для работы npm run start) */
     "noEmit": false,
     "sourceMap": true,

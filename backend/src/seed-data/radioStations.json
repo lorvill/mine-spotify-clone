@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Jazz",
+    "subtitle": "Jazz music",
+    "image": "https://i.pinimg.com/1200x/a7/72/eb/a772ebd1f36fffac29c6423e77ce109d.jpg"
+  },
+  {
+    "title": "Rock radio",
+    "subtitle": "Welcome to radio rock",
+    "image": "https://i.pinimg.com/736x/23/5b/29/235b29f4f8b6e995c9eda5fd71d52443.jpg"
+  },
+  {
+    "title": "Hip-hop music",
+    "subtitle": "Move and dance",
+    "image": "https://i.pinimg.com/736x/1f/5f/7f/1f5f7f66fd9b15056619add59657857b.jpg"
+  },
+  {
+    "title": "Retro",
+    "subtitle": "Retro music",
+    "image": "https://i.pinimg.com/736x/91/3d/50/913d50a0de0f3c7d2d03351d5a44481b.jpg"
+  }
+]
