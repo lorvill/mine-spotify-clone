@@ -2,62 +2,66 @@ import { authService } from '../services/auth-service.js'
 import logger from '../logger.js'
 import { Request, Response } from 'express'
 import { Registration, Login } from '../types/auth.js'
+import { AppError } from '../errors/custom-errors.js'
 
 export const authController = {
   async register(req: Request<any, any, Registration>, res: Response) {
-    const user = await authService.register(req.body)
-    logger.debug(user.id, 'User has been created')
+    try {
+      const user = await authService.register(req.body)
 
-    req.session.userId = user.id
-
-    req.session.save((err) => {
-      if (err) {
-        logger.error(err)
-        return res.status(500).json({ message: "Session error" })
-      }
-      res.status(201).json(user)
-    })
+      req.session.userId = user.id
+      await new Promise<void>((resolve, reject):void => {
+        req.session.save((err) =>
+          err ? reject(err) : resolve()
+        ) // promisification
+      })
+      res.json(user)
+    } catch (error) {
+        throw new AppError('Failed to create session', { cause: error })
+    }
   },
 
   async login(req: Request<any, any, Login>, res: Response) {
-    const { identity, password, rememberMe } = req.body
+    try {
+      const { identity, password, rememberMe } = req.body
+      const user = await authService.login({ identity, password })
 
-    const user = await authService.login({ identity, password })
+      await new Promise<void>((resolve, reject) => {
+        req.session.regenerate(err => {
+          if (err) return reject(err)
 
-    req.session.userId = user.id
-    if (rememberMe) {
-      req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 30d
-    } else {
-      req.session.cookie.maxAge = 1000 * 60 * 60 // 1h
-    }
+          req.session.userId = user.id
+          req.session.cookie.maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000
+          req.session.save(saveErr => saveErr ? reject(saveErr) : resolve())
+        })
+      })
 
-    req.session.save((err) => {
-      if (err) {
-        logger.error('Session save error:', err)
-        return res.status(500).json({ message: "Session error" })
-      }
-
-      logger.debug({ userId: user.id }, 'User logged in successfully:')
       res.json(user)
-    })
-   },
+    } catch (error) {
+      throw new AppError('Failed to create session', { cause: error })
+    }
+  },
 
   async logout(req: Request, res: Response) {
-    req.session.destroy((err) => {
-      if (err) res.status(500).json({ message: 'Error logging out' })
-    })
+    try {
 
-    res.clearCookie('sessionId')
-    res.status(200).json({ message: 'Logged out' })
+      await new Promise<void>((resolve, reject) => {
+        req.session.destroy((err) => {
+          err ? reject(err) : resolve();
+        })
+      })
+      res.clearCookie('sessionId')
+      if (!req.session) {
+        res.status(200).json({ message: 'Logged out' })
+      }
+    } catch (error) {
+      throw new AppError('Failed to destroy session', { cause: error })
+    }
+
   },
 
   async getUser(req: Request, res: Response) {
       const currentUser = await authService.getMe(req.userId)
-
-      if (!currentUser) {
-        return res.status(404).json({ message: "User not found"})
-      }
-
-      res.status(200)
+      res.json(currentUser)
   },
 }
