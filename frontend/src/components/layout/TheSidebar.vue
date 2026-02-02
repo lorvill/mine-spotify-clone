@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { RouterLink, useRoute } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
-import { useTemplateRef } from 'vue'
-import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
+import { useTemplateRef, watch } from 'vue'
+import { useAllPlaylistsQuery } from '@/queries/usePlaylistQuery.ts'
 
 const route = useRoute()
 const modalWindow = useTemplateRef('modalWindow')
-const { data } = usePlaylistQuery()
+const { data } = useAllPlaylistsQuery()
 
 function isActive(path: string) {
   return route.path === path
 }
 
-console.log(data)
 </script>
 
 <template>
@@ -76,10 +75,14 @@ console.log(data)
 
     <hr class="border-b border-b-gray-700 mt-2" />
 
-    <ul class="mt-10" v-if="data">
-      <li v-for="playlist in data ?? []" :key="playlist.id" class="text-neutral-300 text-[15px] hover:text-white mb-2 cursor-pointer">
+    <ul class="mt-10" v-if="Array.isArray(data)">
+      <li
+        v-for="playlist in data"
+        :key="playlist.id"
+        class="text-neutral-300 text-[15px] hover:text-white mb-2 cursor-pointer"
+      >
         <RouterLink :to="`/playlist/${playlist.id}`">
-          {{ playlist.name }}
+          {{ playlist.title }}
         </RouterLink>
       </li>
     </ul>

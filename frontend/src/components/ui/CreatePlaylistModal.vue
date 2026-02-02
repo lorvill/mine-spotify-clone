@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { usePlaylist } from '@/composables/usePlaylist.ts'
 import { useRouter } from 'vue-router'
+import type { Playlist } from '@/types/playlist.ts'
 import FileImageInput from '@/components/ui/FileImageInput.vue'
 const open = ref(false)
 
@@ -11,15 +12,15 @@ const closeModal = () => {
 }
 
 const openModal = () => { open.value = true }
-const { addPlaylistMutation } = usePlaylist()
+const { createPlaylistMutation } = usePlaylist()
 const playlistId = ref()
 const playlistDescription = ref('')
-const playlistName = ref('')
-const router = useRouter()
+const playlistTitle = ref('')
+// const router = useRouter()
 const imageFile = ref<File | null>(null)
 
 const disabledBtn = computed(() => {
-  return !playlistName.value
+  return !playlistTitle.value
 })
 
 const outOfModal = (event: MouseEvent | TouchEvent) => {
@@ -27,24 +28,20 @@ const outOfModal = (event: MouseEvent | TouchEvent) => {
 }
 
 function cleanup() {
-  playlistName.value = ''
+  playlistTitle.value = ''
   playlistDescription.value = ''
 }
 
 function createPlaylist() {
-  const playlist = {
+  const playlist: Playlist = {
     id: playlistId.value,
-    name: playlistName.value,
+    title: playlistTitle.value,
     description: playlistDescription.value,
   }
-  addPlaylistMutation.mutate(playlist, {
-    onSuccess: (data) => {
-      router.push(`/playlist/${data.id}`)
-      console.log('Playlist created successfully:', data)
-      closeModal()
-    },
+  createPlaylistMutation.mutate(playlist, {
+    onSuccess: () => closeModal(),
     onError: (error) => {
-      console.error('Error creating playlist:', error)
+      throw new Error(`Error creating playlist: ${error}`)
     },
   })
 }
@@ -75,7 +72,7 @@ defineExpose({ openModal })
 
             <form class="flex flex-col gap-3">
               <input
-                v-model="playlistName"
+                v-model="playlistTitle"
                 type="text"
                 placeholder="Add a name"
                 required

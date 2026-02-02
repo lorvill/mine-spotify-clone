@@ -1,16 +1,31 @@
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
+import type { Playlist } from '@/types/playlist.ts'
 
-export function usePlaylistQuery() {
+async function fetchPlaylists(id?: string): Promise<Playlist[] | Playlist> {
+  const url = id ? `/api/playlists/${id}` : `/api/playlists`
+
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+
+  return response.json()
+}
+
+export function usePlaylistQuery(id: string) {
   return useQuery({
-    queryKey: ['playlist'],
-    queryFn: fetchPlaylists,
-    placeholderData: keepPreviousData,
+    queryKey: ['playlist', id],
+    queryFn: () => fetchPlaylists(id) as Promise<Playlist>,
+    enabled: !!id,
+    retry: 1,
   })
 }
 
-async function fetchPlaylists() {
-  const url = 'https://64e9970736435f75.mokky.dev/playlist'
-  const res = await fetch(url)
-  if (!res.ok) throw new Error('Failed to get playlists')
-  return res.json()
+export function useAllPlaylistsQuery() {
+  return useQuery({
+    queryKey: ['playlists'],
+    queryFn: () => fetchPlaylists(),
+    staleTime: 5 * 60 * 1000
+  })
 }
+

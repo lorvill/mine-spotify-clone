@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -14,7 +13,20 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   username  String   @unique
 
+  playlists Playlist[]
+
   @@map("users")
+}
+
+model Playlist {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  createdAt   DateTime @default(now()) @map("created_at")
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+
+  @@map("playlists")
 }
 
 model Podcast {

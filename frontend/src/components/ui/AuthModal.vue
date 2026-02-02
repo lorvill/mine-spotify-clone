@@ -20,7 +20,6 @@ const { handleSubmit, errors, resetForm } = useForm<AuthFormValues>({
   validationSchema,
 })
 
-
 const closeModal = () => {
   open.value = false
   resetForm()

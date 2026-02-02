@@ -17,3 +17,9 @@ export class BadRequest extends AppError {
     super(message, { ...options, statusCode: 400})
   }
 }
+
+export class Unauthorized extends AppError {
+  constructor(message = "Unauthorized", options: ErrorOptions = {}) {
+    super(message, { ...options, statusCode: 401})
+  }
+}

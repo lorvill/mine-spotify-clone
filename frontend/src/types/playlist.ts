@@ -1,5 +1,5 @@
 export type Playlist = {
-  id: string,
-  name: string,
+  id: string | number
+  title: string,
   description: string
 }
