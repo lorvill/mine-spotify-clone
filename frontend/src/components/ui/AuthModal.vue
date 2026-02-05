@@ -11,6 +11,9 @@ const open = ref(false)
 const mode = ref<'sign in' | 'sign up'>('sign in')
 const isRegister = computed(() => mode.value === 'sign up')
 type AuthFormValues = Partial<RegisterCredentials & LoginCredentials>
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
 
 const validationSchema = computed(() =>
   isRegister.value ? registrationSchema('sign up') : loginSchema(),
@@ -23,6 +26,7 @@ const { handleSubmit, errors, resetForm } = useForm<AuthFormValues>({
 const closeModal = () => {
   open.value = false
   resetForm()
+  emit('close')
 }
 
 const openModal = () => (open.value = true)

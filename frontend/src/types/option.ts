@@ -1,5 +1,5 @@
-export type Option =  {
-  option: string;
+export interface Option {
+  option: any;
   name: string;
   children?: Option[]
 }

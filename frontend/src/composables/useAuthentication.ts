@@ -16,21 +16,21 @@ export function useAuthentication()  {
   const loginUser = useMutation({
     mutationFn: login,
     onSuccess: data => {
-      queryClient.setQueryData(['user'], data.user)
+      queryClient.setQueryData(['login-user'], data.user)
     }
   })
 
   const registerUser = useMutation({
     mutationFn: register,
     onSuccess: data => {
-      queryClient.setQueryData(['user'], data.user)
+      queryClient.setQueryData(['register-user'], data.user)
     }
   })
 
   const logoutUser = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ['user'] })
+      queryClient.removeQueries({ queryKey: ['logout-user'] })
     }
   })
 

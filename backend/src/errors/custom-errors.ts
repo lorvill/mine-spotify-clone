@@ -23,3 +23,9 @@ export class Unauthorized extends AppError {
     super(message, { ...options, statusCode: 401})
   }
 }
+
+export class NotFoundError extends AppError {
+  constructor(message = "Not Found", options: ErrorOptions = {}) {
+    super(message, { ...options, statusCode: 404 })
+  }
+}

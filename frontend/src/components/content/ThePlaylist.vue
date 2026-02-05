@@ -6,7 +6,6 @@ import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
 import FileImageInput from '@/components/ui/FileImageInput.vue'
-import { usePlaylist } from '@/composables/usePlaylist.ts'
 
 const route = useRoute()
 const trackStore = useTrackStore()
@@ -20,7 +19,7 @@ const playlistTitle = computed(() => {
 </script>
 
 <template>
-  <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
+  <div class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col">
     <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#737373]/90 to-[#4a4a4a]/70">
       <div class="flex items-end gap-6 mb-0">
         <file-image-input v-model="imageFile" />

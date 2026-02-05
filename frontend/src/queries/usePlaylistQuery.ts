@@ -23,7 +23,7 @@ export function usePlaylistQuery(id: string) {
 
 export function useAllPlaylistsQuery() {
   return useQuery({
-    queryKey: ['playlists'],
+    queryKey: ['all-playlists'],
     queryFn: () => fetchPlaylists(),
     staleTime: 5 * 60 * 1000
   })

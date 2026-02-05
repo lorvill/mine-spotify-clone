@@ -5,6 +5,7 @@ export function usePlaylist(){
   const { createPlaylist, deletePlaylist } = apiPlaylists
   const queryClient = useQueryClient()
 
+
   const createPlaylistMutation = useMutation({
     mutationFn: createPlaylist,
     onSuccess: async () => {
@@ -12,15 +13,15 @@ export function usePlaylist(){
     },
   })
 
-  const removePlaylistMutation = useMutation({
+  const deletePlaylistMutation = useMutation({
     mutationFn: deletePlaylist,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['playlist'] })
+      await queryClient.invalidateQueries({ queryKey: ['delete-playlist'] })
     },
   })
 
   return {
     createPlaylistMutation,
-    removePlaylistMutation,
+    deletePlaylistMutation,
   }
 }

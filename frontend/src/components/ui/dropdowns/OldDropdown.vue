@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheDropDown from '@/components/ui/TheDropDown.vue'
+import TheDropDown from '@/components/ui/dropdowns/TheDropDown.vue'
 import type { Track } from '@/types/track.ts'
 import { useLikedTracks } from '@/composables/useLikedTracks.ts'
 import TheToast from '@/components/ui/TheToast.vue'

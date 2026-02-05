@@ -1,12 +1,9 @@
 import { authService } from '../services/auth-service.js'
-import logger from '../logger.js'
 import { Request, Response } from 'express'
 import { Registration, Login } from '../types/auth.js'
-import { AppError } from '../errors/custom-errors.js'
 
 export const authController = {
   async register(req: Request<any, any, Registration>, res: Response) {
-    try {
       const user = await authService.register(req.body)
 
       req.session.userId = user.id
@@ -16,13 +13,9 @@ export const authController = {
         ) // promisification
       })
       res.json(user)
-    } catch (error) {
-        throw new AppError('Failed to create session', { cause: error })
-    }
   },
 
   async login(req: Request<any, any, Login>, res: Response) {
-    try {
       const { identity, password, rememberMe } = req.body
       const user = await authService.login({ identity, password })
 
@@ -37,27 +30,15 @@ export const authController = {
       })
 
       res.json(user)
-    } catch (error) {
-      throw new AppError('Failed to create session', { cause: error })
-    }
   },
 
   async logout(req: Request, res: Response) {
-    try {
-
       await new Promise<void>((resolve, reject) => {
         req.session.destroy((err) => {
           err ? reject(err) : resolve();
         })
       })
       res.clearCookie('sessionId')
-      if (!req.session) {
-        res.status(200).json({ message: 'Logged out' })
-      }
-    } catch (error) {
-      throw new AppError('Failed to destroy session', { cause: error })
-    }
-
   },
 
   async getUser(req: Request, res: Response) {

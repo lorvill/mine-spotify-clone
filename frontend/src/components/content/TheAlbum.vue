@@ -5,7 +5,7 @@ import { useTrackStore } from '@/stores/trackStore.ts'
 import { useSelectAlbumQuery } from '@/queries/useSelectAlbumQuery.ts'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
-import TrackDropDown from '@/components/ui/TrackDropDown.vue'
+import TrackDropDown from '@/components/ui/dropdowns/TrackDropDown.vue'
 
 const store = useTrackStore()
 const route = useRoute()
@@ -16,7 +16,7 @@ const openDropdownIndex = ref<number | null>(null)
 </script>
 
 <template>
-  <div class="w-[calc(100%-240px)] fixed right-0 h-screen bg-neutral-900">
+  <div class="w-[calc(100%-300px)] fixed right-0 h-screen bg-neutral-900">
     <div v-if="isAlbumLoading" class="text-gray-400 text-center mt-20">Loading...</div>
     <div v-else-if="albumError" class="text-red-500 text-center mt-20">Failed to load data</div>
 

@@ -7,8 +7,7 @@ import logger from '../logger.js'
 
 export const playlistController = {
   async createPlaylist(req: Request<any, any, Playlist>, res: Response) {
-    logger.debug(req.body)
-    const userId = req.session.userId
+    const userId = req.userId
     if (!userId) throw new Unauthorized()
 
     const playlist = await playlistService.create({
@@ -20,29 +19,23 @@ export const playlistController = {
   },
 
   async getPlaylist(req: Request<any, any, Playlist>, res: Response) {
-    try {
-      const { id } = req.params
-      const playlistId = Number(id)
-      if (isNaN(playlistId)) {
-        return res.status(400).json({ message: 'Invalid playlist id' })
-      }
-      const playlist = await playlistService.getById(playlistId)
-      if (!playlist) {
-        return res.status(404).json({ message: 'Playlist not found' })
-      }
-      return res.json(playlist)
-    } catch (error) {
-      throw new AppError('Error getting playlist')
-    }
+    const { id } = req.params
+    const playlistId = Number(id)
+    const playlist = await playlistService.getById(playlistId)
+    return res.json(playlist)
   },
 
   async getAllPlaylists(req: Request, res: Response) {
     const userId = req.userId
-    if (!userId) throw new Unauthorized()
     const playlists = await playlistService.getAllPlaylists(userId)
-    if (!playlists) {
-      throw new AppError('Error getting playlists')
-    }
     return res.json(playlists)
+  },
+
+  async deletePlaylist(req: Request<any, any, Playlist>, res: Response) {
+    const { id } = req.params
+    const playlistId = Number(id)
+    const userId = req.userId
+    const deletePlaylist = await playlistService.deletePlaylist(playlistId, userId!)
+    return res.json(deletePlaylist)
   }
 }

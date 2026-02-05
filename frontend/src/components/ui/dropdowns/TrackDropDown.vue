@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheDropDown from '@/components/ui/TheDropDown.vue'
+import TheDropDown from '@/components/ui/dropdowns/TheDropDown.vue'
 import type { Playlist } from '@/types/playlist.ts'
 import type { Option } from '@/types/option.ts'
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
@@ -16,7 +16,7 @@ const options = computed(() => {
     name: 'Add to Playlist',
     children: playlists.map((playlist: Playlist) => ({
       option: `playlist-${playlist.id}`,
-      name: playlist.name,
+      name: playlist.title,
     })),
   }
 
