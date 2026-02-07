@@ -1,9 +1,9 @@
 import { prisma } from '../prisma-client.js'
-import type { Playlist } from '../types/playlist.js'
-import { NotFoundError, Unauthorized } from '../errors/custom-errors.js'
+import { NotFoundError, UnauthorizedError } from '../errors/custom-errors.js'
+import { Prisma } from '@prisma/client'
 
 export const playlistService = {
-  async create(data: Playlist & { authorId: number }) {
+  async create(data: Prisma.PlaylistCreateInput) {
     return prisma.playlist.create({
       data
     })
@@ -12,23 +12,24 @@ export const playlistService = {
   async getById(id: number) {
     const playlist = await prisma.playlist.findUnique({
       where: { id },
-      include: { author: { select: { username: true }}}
+      include: { user: { select: { username: true }}}
     })
     if (!playlist) throw new NotFoundError(`Playlist with id ${id} not found`)
     return playlist
   },
 
-  async getAllPlaylists(authorId?: number) {
+  async getAllPlaylists(userId?: number) {
     return prisma.playlist.findMany({
-      where: authorId ? { authorId } : undefined,
-      include: { author: { select: { username: true }}}
+      where: userId ? { userId } : undefined,
+      include: { user: { select: { username: true }}}
     })
   },
 
   async deletePlaylist(id: number, userId: number) {
     const playlist = await prisma.playlist.findUnique({ where: { id }})
     if (!playlist) throw new NotFoundError(`Playlist not found`)
-    if (playlist.authorId !== userId) throw new Unauthorized('You do not have permission to delete the playlist')
+
+    if (playlist.userId !== userId) throw new UnauthorizedError('Access denied')
 
     return prisma.playlist.delete({ where: { id }})
   }

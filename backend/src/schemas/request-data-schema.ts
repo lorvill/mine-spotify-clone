@@ -1,7 +1,7 @@
 import { z as zod} from "zod";
 
 export const idParams= zod.object({
-    id: zod.string().regex(/^\d+$/, "id must be a number"),
+    id: zod.coerce.number()
 })
 
 export const bodyReq= zod.object({
