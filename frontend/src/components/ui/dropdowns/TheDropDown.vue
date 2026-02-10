@@ -11,9 +11,9 @@ const emit = defineEmits<{
 
 const isOpened = ref(false)
 const selectedOption = ref<string | null>(null)
-const closeDropdown = () => (isOpened.value = false)
+const closeDropdown = () => isOpened.value = false
 const dropdownRef = ref<HTMLElement | null>(null)
-const toggleDropdown = () => (isOpened.value = !isOpened.value)
+const toggleDropdown = () => isOpened.value = !isOpened.value
 
 function handleSelect(item: Option) {
   emit('select', item)
@@ -31,8 +31,8 @@ onUnmounted(() => document.removeEventListener('click', outsideClick))
 </script>
 
 <template>
-    <div class="relative inline-block " ref="dropdownRef">
-      <button @click.stop="toggleDropdown" class="p-1 block">
+    <div class="relative inline-block" ref="dropdownRef" >
+      <button @click.stop="toggleDropdown" class="p-1 block cursor-pointer">
         <slot name="trigger">
           <img src="/images/icons/dots.png" class="w-6 h-6 invert rotate-90" />
         </slot>

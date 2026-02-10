@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import type { Track } from '@/types/track.ts'
 
 defineProps<{ track: Track }>()
-const { data } = usePlaylistQuery()
+// const { data } = usePlaylistQuery()
 const options = computed(() => {
   const playlists = data.value ?? []
 

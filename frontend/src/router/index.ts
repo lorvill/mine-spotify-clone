@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type RouteLocation } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LibraryView from '@/views/LibraryView.vue'
 import AlbumView from '@/views/AlbumView.vue'
@@ -7,6 +7,7 @@ import LikedTracksView from '@/views/LikedTracksView.vue'
 import BrowseAllView from '@/views/BrowseAllView.vue'
 import { queryClient } from '@/helpers/queryClient.ts'
 import { apiAuth } from '@/api/auth.ts'
+import { authKeys } from '@/utils/queryKeysFactory.ts'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +48,8 @@ const router = createRouter({
       component: BrowseAllView,
     },
   ],
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'exact-active',
 })
 
 router.beforeEach(async (to, from, next) => {
@@ -56,7 +59,7 @@ router.beforeEach(async (to, from, next) => {
   }
   try {
     const user = await queryClient.ensureQueryData({
-      queryKey: ['user'],
+      queryKey: authKeys.currentUser,
       queryFn: apiAuth.getUser,
     })
     if (user) {

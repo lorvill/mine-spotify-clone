@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useAuthentication } from '@/composables/useAuthentication.ts'
 import { Field, useForm } from 'vee-validate'
-import { registrationSchema, loginSchema } from '@/modules/validation-schema.ts'
+import { registrationSchema, loginSchema } from '@/schemas/validation-schema.ts'
 import type { LoginCredentials } from '@/types/loginCredentials.ts'
 import type { RegisterCredentials } from '@/types/registerCredentials.ts'
 

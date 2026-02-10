@@ -10,19 +10,19 @@ const modalWindow = useTemplateRef('modalWindow')
 const { logout, isAuthenticated, currentUser } = useAuthentication()
 const username = computed(() => currentUser.value.username)
 
-function isActive(path: string) {
-  return route.path === path
-}
-
-watch(() => route.query.auth, (newVal) => {
-  if (newVal === 'login') {
-    modalWindow.value?.openModal()
-  }
-}, { immediate: true })
+watch(
+  () => route.query.auth,
+  (newVal) => {
+    if (newVal === 'login') {
+      modalWindow.value?.openModal()
+    }
+  },
+  { immediate: true },
+)
 
 function resetUrl() {
   if (route.query.auth === 'login') {
-    router.push({query: { ...route.query, auth: undefined } })
+    router.push({ query: { ...route.query, auth: undefined } })
   }
 }
 </script>
@@ -32,22 +32,20 @@ function resetUrl() {
     <div class="w-[300px] hidden md:block"></div>
 
     <div class="flex items-center gap-0">
-      <RouterLink
-        to="/"
-        class="flex items-center justify-center w-10 h-10 mr-5"
-        :class="isActive('/') ? 'brightness-200' : 'brightness-75'"
-        title="Browse"
-      >
-        <img src="/images/icons/layer.png" class="w-6 h-6 object-contain invert-100" alt="Home" />
-      </RouterLink>
 
-      <RouterLink
-        to="/home"
+
+
+      <router-link
+        :to="{ name: 'home' }"
         class="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(205,197,194,0.2)] mr-1"
-        :class="isActive('/home') ? 'brightness-150' : 'brightness-75'"
+        title="Home"
       >
-        <img src="/images/icons/home.png" class="w-6 h-6 object-contain invert-100" alt="Home" />
-      </RouterLink>
+        <img
+          src="/images/icons/home.png"
+          class="w-6 h-6 object-contain link-img"
+          alt="Home"
+        />
+      </router-link>
     </div>
 
     <form class="spotify-search relative flex items-center group">
@@ -110,5 +108,14 @@ function resetUrl() {
     width: 100%;
     min-width: 150px;
   }
+}
+
+.link-img {
+  filter: brightness(0.75) invert(1);
+  transition: filter 0.2s ease;
+}
+
+.active .link-img {
+  filter: brightness(1.5) invert(1);
 }
 </style>

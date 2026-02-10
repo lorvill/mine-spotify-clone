@@ -1,36 +1,37 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { apiAuth } from '@/api/auth.ts'
 import { computed } from 'vue'
+import { authKeys, playlistKeys } from '@/utils/queryKeysFactory.ts'
 
 export function useAuthentication()  {
   const { login, register, getUser, logout } = apiAuth
-
   const queryClient = useQueryClient()
 
   const currentUser = useQuery({
-    queryKey: ['user'],
+    queryKey: authKeys.currentUser,
     queryFn: getUser,
     retry: false,
   })
 
   const loginUser = useMutation({
     mutationFn: login,
-    onSuccess: data => {
-      queryClient.setQueryData(['login-user'], data.user)
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.currentUser })
     }
   })
 
   const registerUser = useMutation({
     mutationFn: register,
-    onSuccess: data => {
-      queryClient.setQueryData(['register-user'], data.user)
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.currentUser })
     }
   })
 
   const logoutUser = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ['logout-user'] })
+      queryClient.clear()
+      window.location.href = '/'
     }
   })
 
