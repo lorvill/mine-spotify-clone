@@ -10,7 +10,7 @@ const { data: songs, isLoading: isSongLoading, error: songError } = useSongsQuer
 </script>
 
 <template>
-  <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
+  <div class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col">
 
     <div class="flex-1 overflow-y-auto no-scrollbar">
       <section id="Podcasts" class="mt-6 px-4">

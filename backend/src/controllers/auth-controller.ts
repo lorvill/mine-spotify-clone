@@ -15,7 +15,7 @@ export const authController = {
           err ? reject(err) : resolve()
         ) // promisification
       })
-      res.json(user)
+      return res.json(user)
     } catch (error) {
         throw new AppError('Failed to create session', { cause: error })
     }
@@ -36,7 +36,7 @@ export const authController = {
         })
       })
 
-      res.json(user)
+      return res.json(user)
     } catch (error) {
       throw new AppError('Failed to create session', { cause: error })
     }
@@ -44,7 +44,6 @@ export const authController = {
 
   async logout(req: Request, res: Response) {
     try {
-
       await new Promise<void>((resolve, reject) => {
         req.session.destroy((err) => {
           err ? reject(err) : resolve();
@@ -52,7 +51,7 @@ export const authController = {
       })
       res.clearCookie('sessionId')
       if (!req.session) {
-        res.status(200).json({ message: 'Logged out' })
+        return res.status(200).json({ message: 'Logged out' })
       }
     } catch (error) {
       throw new AppError('Failed to destroy session', { cause: error })
@@ -62,6 +61,6 @@ export const authController = {
 
   async getUser(req: Request, res: Response) {
       const currentUser = await authService.getMe(req.userId)
-      res.json(currentUser)
+      return res.json(currentUser)
   },
 }

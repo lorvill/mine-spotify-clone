@@ -2,106 +2,64 @@
 import { RouterLink, useRoute } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
 import { useTemplateRef } from 'vue'
-<<<<<<< HEAD
-import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
-=======
-import { useAllPlaylistsQuery } from '@/queries/useAllPlaylistsQuery.ts'
 import TheDropDown from '@/components/ui/dropdowns/TheDropDown.vue'
 import { usePlaylistDropdown } from '@/composables/usePlaylistDropdown.ts'
 import { useAlbumsQuery } from '@/queries/useAlbumsQuery.ts'
->>>>>>> 6db7f6d (fixed dropdown)
+import { useAllPlaylistsQuery } from '@/queries/useAllPlaylistsQuery.ts'
 
 const route = useRoute()
 const modalWindow = useTemplateRef('modalWindow')
-<<<<<<< HEAD
-const { data } = usePlaylistQuery()
 
-function isActive(path: string) {
-  return route.path === path
-}
-
-console.log(data)
-=======
 const { status, data } = useAllPlaylistsQuery()
 const { handlePlaylistAction, playlistOptions } = usePlaylistDropdown()
 const { data: albums } = useAlbumsQuery()
->>>>>>> 6db7f6d (fixed dropdown)
 </script>
 
 <template>
-  <div class="h-[100%] p-6 w-[240px] fixed bg-black">
-    <RouterLink to="/">
-      <img width="125" src="/images/icons/spotify-logo.png" />
-    </RouterLink>
+  <div class="h-[100%] p-5 w-[300px] fixed bg-black">
+    <div class="flex items-center justify-between">
+      <router-link :to="{ name: 'browse' }">
+        <img width="110" src="/images/icons/spotify-logo.png" />
+      </router-link>
 
-    <ul class="mt-10">
-      <RouterLink
-        to="/"
-        class="flex items-center gap-3 mb-4 hover:grayscale hover:brightness-150 transition duration-30"
+      <router-link
+        :to="{ name: 'browse' }"
+        class="flex items-center justify-center w-10 h-10"
+        title="Browse"
       >
-        <img
-          width="23"
-          src="/images/icons/home-inactive.png"
-          :class="isActive('/') ? 'grayscale brightness-150' : 'grayscale brightness-75'"
-        />
-        <span
-          class="font-medium text-[15px] text-gray-400"
-          :class="isActive('/') ? 'grayscale brightness-150' : 'text-gray-400'"
-        >
-          Home
-        </span>
-      </RouterLink>
+        <img src="/images/icons/layer.png" class="w-6 h-6 object-contain link-img" alt="Home" />
+      </router-link>
+    </div>
 
-      <RouterLink
-        to="/library"
-        class="flex items-center gap-3 mb-10 hover:grayscale hover:brightness-150 transition duration-30"
-      >
-        <img
-          width="23"
-          src="/images/icons/library-inactive.png"
-          :class="isActive('/library') ? 'grayscale brightness-150' : 'grayscale brightness-75'"
-        />
-        <span
-          class="font-medium text-[15px] text-gray-400"
-          :class="isActive('/library') ? 'grayscale brightness-150' : 'text-gray-400'"
-        >
-          Library
-        </span>
-      </RouterLink>
+    <div class="mt-10 pl-2 flex items-center justify-between">
+      <router-link :to="{ name: 'library' }" class="flex items-center gap-1.5" title="Library">
+        <img width="20" class="link-img" src="/images/icons/music-album.png" />
+        <span class="font-bold text-[15px]">Your Library</span>
+      </router-link>
 
-      <button
-        class="flex items-center gap-3 mb-4 hover:grayscale hover:brightness-150 transition duration-30 cursor-pointer"
-        @click="modalWindow?.openModal()"
-      >
-        <img width="30" src="/images/icons/playlist-inactive.png" />
-        <span class="font-medium text-[15px] text-gray-400">Create Playlist</span>
+      <button class="create rounded-full font-bold text-white" @click="modalWindow?.openModal()">
+        <img width="14" src="/images/icons/plus.png" class="invert-100" />
+        <span>Create</span>
         <CreatePlaylistModal ref="modalWindow" />
       </button>
+    </div>
 
-      <RouterLink
-        to="/liked-songs"
-        class="flex items-center gap-3 mb-4 hover:grayscale hover:brightness-150 transition duration-30"
-      >
-        <img width="30" src="/images/icons/liked-inactive.png" />
-        <span class="font-medium text-[15px] text-gray-400">Liked Songs</span>
-      </RouterLink>
+    <ul class="mt-7">
+      <router-link :to="{ name: 'liked-songs' }" class="sidebar-item mb-2">
+        <img width="40" src="/images/icons/liked-inactive.png" />
+        <div class="flex-col flex">
+          <span class="text-[15px]">Liked Songs</span>
+          <span class="text-[12px]">Playlist</span>
+        </div>
+      </router-link>
     </ul>
 
-<<<<<<< HEAD
-    <hr class="border-b border-b-gray-700 mt-2" />
-
-    <ul class="mt-10" v-if="data">
-      <li v-for="playlist in data ?? []" :key="playlist.id" class="text-neutral-300 text-[15px] hover:text-white mb-2 cursor-pointer">
-        <RouterLink :to="`/playlist/${playlist.id}`">
-          {{ playlist.name }}
-        </RouterLink>
-=======
     <div v-if="status === 'error'" class="text-white-600"></div>
     <ul v-else-if="status === 'success'">
       <li
         v-for="playlist in data"
         :key="playlist.id"
-        class="flex justify-between items-center sidebar-item cursor-pointer mb-2"
+        class="flex justify-between items-center sidebar-item cursor-pointer"
       >
         <router-link
           :to="{ name: 'playlist', params: { id: playlist.id } }"
@@ -117,7 +75,6 @@ const { data: albums } = useAlbumsQuery()
           :options="playlistOptions"
           @select="(option) => handlePlaylistAction(option, playlist)"
         />
->>>>>>> 6db7f6d (fixed dropdown)
       </li>
 
       <li v-for="album in albums" :key="album.id" class="flex sidebar-item cursor-pointer mb-2">
@@ -130,3 +87,54 @@ const { data: albums } = useAlbumsQuery()
     </ul>
   </div>
 </template>
+
+<style scoped>
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  color: #ffffff;
+  font-size: 0.9375rem;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sidebar-item:hover {
+  background-color: rgba(205, 197, 194, 0.2);
+  color: #ffffff;
+}
+
+.sidebar-item.active {
+  background-color: rgba(205, 197, 194, 0.2);
+}
+
+.create {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.2rem 0.9rem;
+  transition:
+    background-color 0.3s,
+    color 0.15s;
+  cursor: pointer;
+  background-color: rgba(205, 197, 194, 0.2);
+}
+
+.create:hover {
+  background-color: #595959;
+}
+
+.link-img {
+  filter: invert(1) brightness(0.75);
+  transition: filter 0.2s ease;
+}
+
+.active .link-img {
+  filter: invert(1) brightness(1.5);
+}
+</style>

@@ -28,14 +28,11 @@ const cards = computed(() => {
   }
   // return [...(albums?.value ?? []), ...(podcasts?.value ?? [])]
 })
-
 </script>
 
 <template>
-  <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col bg-black">
-
+  <div class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col">
     <section class="flex-1 overflow-y-auto px-6 pt-6 pb-10 space-y-6">
-
       <div class="flex gap-3">
         <Button
           v-for="category in categories"
@@ -49,11 +46,7 @@ const cards = computed(() => {
 
       <div v-if="isAlbumsLoading || isPodcastsLoading" class="text-gray-400"></div>
       <div v-else-if="albumsError || podcastsError" class="text-white">Failed to load data</div>
-      <LibraryCardList
-        v-else
-        title="Albums"
-        :items="cards"
-      />
+      <LibraryCardList v-else title="Albums" :items="cards" />
     </section>
   </div>
 </template>

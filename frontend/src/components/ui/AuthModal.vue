@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useAuthentication } from '@/composables/useAuthentication.ts'
 import { Field, useForm } from 'vee-validate'
-import { registrationSchema, loginSchema } from '@/modules/validation-schema.ts'
+import { registrationSchema, loginSchema } from '@/schemas/validation-schema.ts'
 import type { LoginCredentials } from '@/types/loginCredentials.ts'
 import type { RegisterCredentials } from '@/types/registerCredentials.ts'
 
@@ -11,6 +11,9 @@ const open = ref(false)
 const mode = ref<'sign in' | 'sign up'>('sign in')
 const isRegister = computed(() => mode.value === 'sign up')
 type AuthFormValues = Partial<RegisterCredentials & LoginCredentials>
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
 
 const validationSchema = computed(() =>
   isRegister.value ? registrationSchema('sign up') : loginSchema(),
@@ -20,10 +23,10 @@ const { handleSubmit, errors, resetForm } = useForm<AuthFormValues>({
   validationSchema,
 })
 
-
 const closeModal = () => {
   open.value = false
   resetForm()
+  emit('close')
 }
 
 const openModal = () => (open.value = true)

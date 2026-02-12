@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import z from 'zod'
 
-export function validateMiddleware<T extends z.ZodTypeAny>(schema: T) {
+export function paramsValidation<T extends z.ZodTypeAny>(schema: T) {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
-      req.body = schema.parse(req.body)
+      req.params = schema.parse(req.params)
       next()
     } catch (error) {
       next(error)

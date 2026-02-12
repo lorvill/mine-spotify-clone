@@ -9,42 +9,32 @@ import FileImageInput from '@/components/ui/FileImageInput.vue'
 
 const route = useRoute()
 const trackStore = useTrackStore()
-const { data } = usePlaylistQuery()
 const imageFile = ref<File | null>(null)
+const playlistId = route.params.id
 
-console.log('data:', data)
-console.log('route.params.id:', route.params.id)
-// Получаем ID из URL
-const playlistId = computed(() => route.params.id)
-
-const currentPlaylist = computed(() => {
-  if (!data.value || !playlistId.value) return null
-
-  return data.value.find(p => String(p.id) === String(playlistId.value)) || null
-})
-
-const currentName = computed(() => {
-  return currentPlaylist.value?.name ?? ''
+const { data, error, isLoading } = usePlaylistQuery(playlistId as string)
+const playlistTitle = computed(() => {
+  return data.value?.title
 })
 </script>
 
 <template>
-  <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
+  <div class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col">
     <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#737373]/90 to-[#4a4a4a]/70">
       <div class="flex items-end gap-6 mb-0">
         <file-image-input v-model="imageFile" />
         <div class="flex flex-col gap-4">
-          <p class="text-white font-light text-sm">Playlist</p>
-          <h2 class="text-[70px] font-bold text-white leading-none">{{ currentName }}</h2>
+          <p class="text-white text-sm">Playlist</p>
+          <h2 class="text-[70px] font-bold text-white leading-none">{{ playlistTitle }}</h2>
         </div>
       </div>
     </div>
 
     <div class="flex-1 overflow-y-auto p-8 pt-0 bg-gradient-to-b from-[#303030]/80 to-[#1c1c1c]/10">
-      <div class="p-5 pl-0 flex items-center gap-2">
+      <div class="p-5 pl-0 flex items-center gap-4">
         <button
           class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center hover:scale-105 transition-transform duration-200 shadow-md cursor-pointer"
-          @click="trackStore.playTracksList(data.value)"
+          @click="trackStore.playTracksList(data)"
         >
           <img
             :src="
@@ -75,38 +65,38 @@ const currentName = computed(() => {
       </div>
 
       <hr class="w-full h-px bg-neutral-700 border-0 dark:bg-neutral-700 mb-5" />
-<!--      <ul v-if="data.value">-->
-<!--        <li-->
-<!--          v-for="(track, index) in data.value"-->
-<!--          :key="track.id"-->
-<!--          class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-200/10 transition-colors cursor-pointer"-->
-<!--          @mouseenter="hoverIndex = index"-->
-<!--          @mouseleave="hoverIndex = null"-->
-<!--          @click="trackStore.togglePlayPause(track, index, data.value)"-->
-<!--        >-->
-<!--          <div class="w-4 h-4 flex items-center justify-center">-->
-<!--            <button v-if="hoverIndex === index">-->
-<!--              <img-->
-<!--                class="filter invert cursor-pointer"-->
-<!--                :src="-->
-<!--                  trackStore.isPlaying-->
-<!--                    ? '/images/icons/pause.png'-->
-<!--                    : '/images/icons/play-button-arrowhead.png'-->
-<!--                "-->
-<!--                alt="play/stop"-->
-<!--              />-->
-<!--            </button>-->
-<!--            <span v-else class="text-neutral-400">{{ index + 1 }}</span>-->
-<!--          </div>-->
+      <!--      <ul v-if="data.value">-->
+      <!--        <li-->
+      <!--          v-for="(track, index) in data.value"-->
+      <!--          :key="track.id"-->
+      <!--          class="flex items-center justify-between p-2 rounded-md hover:bg-neutral-200/10 transition-colors cursor-pointer"-->
+      <!--          @mouseenter="hoverIndex = index"-->
+      <!--          @mouseleave="hoverIndex = null"-->
+      <!--          @click="trackStore.togglePlayPause(track, index, data.value)"-->
+      <!--        >-->
+      <!--          <div class="w-4 h-4 flex items-center justify-center">-->
+      <!--            <button v-if="hoverIndex === index">-->
+      <!--              <img-->
+      <!--                class="filter invert cursor-pointer"-->
+      <!--                :src="-->
+      <!--                  trackStore.isPlaying-->
+      <!--                    ? '/images/icons/pause.png'-->
+      <!--                    : '/images/icons/play-button-arrowhead.png'-->
+      <!--                "-->
+      <!--                alt="play/stop"-->
+      <!--              />-->
+      <!--            </button>-->
+      <!--            <span v-else class="text-neutral-400">{{ index + 1 }}</span>-->
+      <!--          </div>-->
 
-<!--          <div class="flex-1 ml-4">-->
-<!--            <p class="text-white font-medium truncate">{{ track.name }}</p>-->
-<!--            <p class="text-neutral-400 text-sm truncate"></p>-->
-<!--          </div>-->
+      <!--          <div class="flex-1 ml-4">-->
+      <!--            <p class="text-white font-medium truncate">{{ track.name }}</p>-->
+      <!--            <p class="text-neutral-400 text-sm truncate"></p>-->
+      <!--          </div>-->
 
-<!--          <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>-->
-<!--        </li>-->
-<!--      </ul>-->
+      <!--          <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>-->
+      <!--        </li>-->
+      <!--      </ul>-->
     </div>
 
     <transition

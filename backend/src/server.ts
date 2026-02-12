@@ -1,6 +1,7 @@
 import express from "express";
 import 'dotenv/config'
 import authRoutes from './routes/auth-routes.js'
+import playlistRoutes from './routes/playlist-routes.js'
 import session from 'express-session'
 import { createClient } from 'redis'
 import { RedisStore } from 'connect-redis'
@@ -10,7 +11,8 @@ import { errorHandler } from './middleware/error-handler.js'
 const app = express();
 const PORT = process.env.PORT || 5003;
 
-app.use(express.json());
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 const client = createClient({
   url: process.env.REDIS_CLIENT,
@@ -46,6 +48,7 @@ app.use(session({
 }))
 
 app.use('/api/auth', authRoutes)
+app.use('/api/playlists', playlistRoutes)
 
 app.use(errorHandler)
 

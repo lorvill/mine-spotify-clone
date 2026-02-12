@@ -12,8 +12,20 @@ export class AppError extends Error {
   }
 }
 
-export class BadRequest extends AppError {
+export class BadRequestError extends AppError {
   constructor(message = "Bad request", options: ErrorOptions = {}) {
     super(message, { ...options, statusCode: 400})
+  }
+}
+
+export class UnauthorizedError extends AppError {
+  constructor(message = "Unauthorized", options: ErrorOptions = {}) {
+    super(message, { ...options, statusCode: 401})
+  }
+}
+
+export class NotFoundError extends AppError {
+  constructor(message = "Not Found", options: ErrorOptions = {}) {
+    super(message, { ...options, statusCode: 404 })
   }
 }

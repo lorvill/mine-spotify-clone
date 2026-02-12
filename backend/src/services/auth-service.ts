@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { prisma } from '../prisma-client.js'
 import { Login, Registration } from '../types/auth.js'
-import { AppError, BadRequest } from '../errors/custom-errors.js'
+import { AppError, BadRequestError } from '../errors/custom-errors.js'
 
 export const authService = {
   async register(userData: Registration) {
@@ -35,10 +35,10 @@ export const authService = {
         OR: [{ email: identity }, { username: identity }]
       },
     })
-    if (!user) throw new BadRequest('Incorrect credentials')
+    if (!user) throw new BadRequestError('Incorrect credentials')
 
     const isMatched = await bcrypt.compare(password, user.password)
-    if (!isMatched) throw new BadRequest()
+    if (!isMatched) throw new BadRequestError()
 
     const { password:_, ...userWithoutPassword } = user
     return userWithoutPassword

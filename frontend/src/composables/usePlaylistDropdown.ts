@@ -1,9 +1,9 @@
 import {useMutation, useQueryClient } from '@tanstack/vue-query'
 import { apiPlaylists } from '@/api/playlists.ts'
-import { playlistKeys } from '@/utils/queryKeysFactory.ts'
 import type { Option } from '@/types/option.ts'
 import type { DropdownPlaylist } from '@/types/dropdownActions.ts'
 import type { Playlist } from '@/types/playlist.ts'
+import { playlistKeys } from '@/utils/queryKeysFactory.ts'
 
 export function usePlaylistDropdown(){
   const { deletePlaylist } = apiPlaylists
