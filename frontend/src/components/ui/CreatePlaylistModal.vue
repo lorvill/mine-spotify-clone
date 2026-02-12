@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+<<<<<<< HEAD
 import { usePlaylist } from '@/composables/usePlaylist.ts'
 import { useRouter } from 'vue-router'
+=======
+import type { Playlist } from '@/types/playlist.ts'
+>>>>>>> 6db7f6d (fixed dropdown)
 import FileImageInput from '@/components/ui/FileImageInput.vue'
+import { useCreatePlaylist } from '@/composables/usePlaylistCreation.ts'
 const open = ref(false)
 
 const closeModal = () => {
@@ -11,11 +16,18 @@ const closeModal = () => {
 }
 
 const openModal = () => { open.value = true }
+<<<<<<< HEAD
 const { addPlaylistMutation } = usePlaylist()
 const playlistId = ref()
 const playlistDescription = ref('')
 const playlistName = ref('')
 const router = useRouter()
+=======
+const { create } = useCreatePlaylist()
+const playlistId = ref()
+const playlistDescription = ref('')
+const playlistTitle = ref('')
+>>>>>>> 6db7f6d (fixed dropdown)
 const imageFile = ref<File | null>(null)
 
 const disabledBtn = computed(() => {
@@ -37,12 +49,17 @@ function createPlaylist() {
     name: playlistName.value,
     description: playlistDescription.value,
   }
+<<<<<<< HEAD
   addPlaylistMutation.mutate(playlist, {
     onSuccess: (data) => {
       router.push(`/playlist/${data.id}`)
       console.log('Playlist created successfully:', data)
       closeModal()
     },
+=======
+  create(playlist, {
+    onSuccess: () => closeModal(),
+>>>>>>> 6db7f6d (fixed dropdown)
     onError: (error) => {
       console.error('Error creating playlist:', error)
     },

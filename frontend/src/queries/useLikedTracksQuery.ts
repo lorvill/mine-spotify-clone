@@ -1,4 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
+import type { Track } from '@/types/track.ts'
 
 export function useLikedTracksQuery() {
   return useQuery({
@@ -8,7 +9,7 @@ export function useLikedTracksQuery() {
   })
 }
 
-async function fetchLikedTracks() {
+async function fetchLikedTracks(): Promise<Track[]> {
   const url = 'https://64e9970736435f75.mokky.dev/liked-tracks'
   const res = await fetch(url)
   if (!res.ok) throw new Error('Failed to get liked tracks')

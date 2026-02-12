@@ -5,14 +5,17 @@ import { useTrackStore } from '@/stores/trackStore.ts'
 import { useSelectAlbumQuery } from '@/queries/useSelectAlbumQuery.ts'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
+<<<<<<< HEAD
 import TrackDropDown from '@/components/ui/TrackDropDown.vue'
+=======
+// import TrackDropDown from '@/components/ui/dropdowns/TrackDropDown.vue'
+>>>>>>> 6db7f6d (fixed dropdown)
 
 const store = useTrackStore()
 const route = useRoute()
 const albumId = route.params.id as string
 const { data: album, isLoading: isAlbumLoading, error: albumError } = useSelectAlbumQuery(albumId)
 const hoverIndex = ref<number | null>(null)
-const openDropdownIndex = ref<number | null>(null)
 </script>
 
 <template>
@@ -84,12 +87,12 @@ const openDropdownIndex = ref<number | null>(null)
             <p class="text-neutral-400 text-sm truncate">{{ album.name }}</p>
           </div>
 
-          <div class="relative">
-            <TrackDropDown
-              :track="track"
-              @click.stop="openDropdownIndex = openDropdownIndex === index ? null : index"
-            />
-          </div>
+<!--          <div class="relative">-->
+<!--            <TrackDropDown-->
+<!--              :track="track"-->
+<!--              @click.stop="openDropdownIndex = openDropdownIndex === index ? null : index"-->
+<!--            />-->
+<!--          </div>-->
           <span class="text-neutral-400 text-sm">{{ secondsToMinutes(track.duration) }}</span>
         </li>
       </ul>
@@ -100,7 +103,7 @@ const openDropdownIndex = ref<number | null>(null)
       enter-from-class="opacity-0"
       enter-to-class="opacity-100"
     >
-      <div v-if="store.activeTrack" class="fixed bottom-0 w-[calc(100%-240px)]">
+      <div v-if="store.activeTrack" class="fixed bottom-0 ">
         <ThePlayer />
       </div>
     </transition>

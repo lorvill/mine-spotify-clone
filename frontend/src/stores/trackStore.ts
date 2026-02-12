@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import type { Track } from '@/types/track.ts'
 import type { Album } from '@/types/album.ts'
 import { computed, ref, watch } from 'vue'
-import { useLikedTracks } from '@/composables/useLikedTracks.ts'
 
 export const useTrackStore = defineStore('track', () => {
   const audio = new Audio()
@@ -23,20 +22,6 @@ export const useTrackStore = defineStore('track', () => {
   const lastVolume = ref(volume.value)
   const muted = ref(false)
   const finalVolume = computed(() => (muted.value ? 0 : volume.value ** 2))
-  // const { addLikedTracksMutation, removeLikedTracksMutation, likedTracksQuery } = useLikedTracks()
-  // const likedTracks = computed(() => likedTracksQuery.data?.value ?? [])
-  // const isTrackLiked =  (track: Track | null) => !!track && likedTracks.value.some(t => t.id === track.id)
-  //
-  // function toggleLike() {
-  //   const track = activeTrack.value
-  //   if (!track) return
-  //   const liked = isTrackLiked(track)
-  //   if (liked) {
-  //     removeLikedTracksMutation.mutate(track.id)
-  //   } else {
-  //     addLikedTracksMutation.mutate(track.id)
-  //   }
-  // }
 
   audio.addEventListener('timeupdate', () => {
     currentTime.value = audio.currentTime

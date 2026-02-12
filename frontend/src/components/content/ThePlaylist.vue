@@ -41,7 +41,7 @@ const currentName = computed(() => {
     </div>
 
     <div class="flex-1 overflow-y-auto p-8 pt-0 bg-gradient-to-b from-[#303030]/80 to-[#1c1c1c]/10">
-      <div class="p-5 pl-0 flex items-center gap-4">
+      <div class="p-5 pl-0 flex items-center gap-2">
         <button
           class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center hover:scale-105 transition-transform duration-200 shadow-md cursor-pointer"
           @click="trackStore.playTracksList(data.value)"

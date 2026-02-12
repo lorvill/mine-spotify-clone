@@ -4,7 +4,7 @@ import { useTrackStore } from '@/stores/trackStore.ts'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
 import ThePlayer from '@/components/ui/ThePlayer.vue'
 import { useLikedTracks } from '@/composables/useLikedTracks.ts'
-import TrackDropDown from '@/components/ui/TrackDropDown.vue'
+// import TrackDropDown from '@/components/ui/dropdowns/TrackDropDown.vue'
 
 const { likedTracksQuery } = useLikedTracks()
 const trackStore = useTrackStore()
@@ -12,6 +12,7 @@ const hoverIndex = ref<number | null>(null)
 
 console.log(likedTracksQuery.data.value)
 </script>
+
 <template>
   <div class="w-[calc(100%-240px)] fixed right-0 h-screen flex flex-col">
 

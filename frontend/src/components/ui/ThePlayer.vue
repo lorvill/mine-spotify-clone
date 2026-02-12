@@ -22,7 +22,7 @@ console.log(store.activeAlbum)
 </script>
 
 <template>
-  <div class="bg-neutral-950 flex items-center justify-between w-[calc(100%-240px)] fixed bottom-0 h-20">
+  <div class="bg-neutral-950 flex items-center justify-between w-[calc(100%-300px)] fixed bottom-0 h-20">
     <div class="flex items-center p-2 pl-5">
       <img
         class="w-14 h-14 rounded-xl object-cover"
@@ -35,8 +35,6 @@ console.log(store.activeAlbum)
       </div>
       <div class="ml-3 flex">
       </div>
-
-
     </div>
 
     <div class="flex items-center flex-col">

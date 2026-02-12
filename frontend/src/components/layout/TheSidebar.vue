@@ -2,10 +2,18 @@
 import { RouterLink, useRoute } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
 import { useTemplateRef } from 'vue'
+<<<<<<< HEAD
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
+=======
+import { useAllPlaylistsQuery } from '@/queries/useAllPlaylistsQuery.ts'
+import TheDropDown from '@/components/ui/dropdowns/TheDropDown.vue'
+import { usePlaylistDropdown } from '@/composables/usePlaylistDropdown.ts'
+import { useAlbumsQuery } from '@/queries/useAlbumsQuery.ts'
+>>>>>>> 6db7f6d (fixed dropdown)
 
 const route = useRoute()
 const modalWindow = useTemplateRef('modalWindow')
+<<<<<<< HEAD
 const { data } = usePlaylistQuery()
 
 function isActive(path: string) {
@@ -13,6 +21,11 @@ function isActive(path: string) {
 }
 
 console.log(data)
+=======
+const { status, data } = useAllPlaylistsQuery()
+const { handlePlaylistAction, playlistOptions } = usePlaylistDropdown()
+const { data: albums } = useAlbumsQuery()
+>>>>>>> 6db7f6d (fixed dropdown)
 </script>
 
 <template>
@@ -74,6 +87,7 @@ console.log(data)
       </RouterLink>
     </ul>
 
+<<<<<<< HEAD
     <hr class="border-b border-b-gray-700 mt-2" />
 
     <ul class="mt-10" v-if="data">
@@ -81,6 +95,37 @@ console.log(data)
         <RouterLink :to="`/playlist/${playlist.id}`">
           {{ playlist.name }}
         </RouterLink>
+=======
+    <div v-if="status === 'error'" class="text-white-600"></div>
+    <ul v-else-if="status === 'success'">
+      <li
+        v-for="playlist in data"
+        :key="playlist.id"
+        class="flex justify-between items-center sidebar-item cursor-pointer mb-2"
+      >
+        <router-link
+          :to="{ name: 'playlist', params: { id: playlist.id } }"
+          class="flex items-center gap-3"
+        >
+          <img src="/images/icons/playlist-inactive.png" width="40" />
+          <div class="flex-col flex">
+            <span class="text-[15px]">{{ playlist.title }}</span>
+            <span class="text-[12px]">{{ playlist.description }}</span>
+          </div>
+        </router-link>
+        <the-drop-down
+          :options="playlistOptions"
+          @select="(option) => handlePlaylistAction(option, playlist)"
+        />
+>>>>>>> 6db7f6d (fixed dropdown)
+      </li>
+
+      <li v-for="album in albums" :key="album.id" class="flex sidebar-item cursor-pointer mb-2">
+        <img src="/images/icons/playlist-inactive.png" width="40" />
+        <div class="flex-col flex">
+          <span class="text-[15px]">{{ album.title }}</span>
+          <span class="text-[12px]">{{ album.subtitle }}</span>
+        </div>
       </li>
     </ul>
   </div>

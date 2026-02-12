@@ -7,14 +7,14 @@ export function useLikedTracks() {
   const addLikedTracksMutation = useMutation({
     mutationFn: addLikedTracks,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
+      queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
     },
   })
 
   const removeLikedTracksMutation = useMutation({
     mutationFn: removeLikedTracks,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
+      queryClient.invalidateQueries({ queryKey: ['likedTracks'] })
     },
   })
 
