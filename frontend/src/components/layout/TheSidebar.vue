@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
 import { useTemplateRef } from 'vue'
 import TheDropDown from '@/components/ui/dropdowns/TheDropDown.vue'
 import { usePlaylistDropdown } from '@/composables/usePlaylistDropdown.ts'
 import { useAlbumsQuery } from '@/queries/useAlbumsQuery.ts'
 import { useAllPlaylistsQuery } from '@/queries/useAllPlaylistsQuery.ts'
+import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal.vue'
 
-const route = useRoute()
 const modalWindow = useTemplateRef('modalWindow')
-
 const { status, data } = useAllPlaylistsQuery()
 const { handlePlaylistAction, playlistOptions } = usePlaylistDropdown()
 const { data: albums } = useAlbumsQuery()
@@ -76,7 +75,6 @@ const { data: albums } = useAlbumsQuery()
           @select="(option) => handlePlaylistAction(option, playlist)"
         />
       </li>
-
       <li v-for="album in albums" :key="album.id" class="flex sidebar-item cursor-pointer mb-2">
         <img src="/images/icons/playlist-inactive.png" width="40" />
         <div class="flex-col flex">
@@ -85,6 +83,8 @@ const { data: albums } = useAlbumsQuery()
         </div>
       </li>
     </ul>
+
+    <delete-confirmation-modal />
   </div>
 </template>
 
