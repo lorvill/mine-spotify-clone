@@ -6,6 +6,9 @@ import router from './router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
+import Toast, { POSITION } from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+
 
 const app = createApp(App)
 
@@ -24,6 +27,11 @@ app.use(PrimeVue, {
   theme: {
     preset: Aura
   }
-});
+})
+
+app.use(Toast, {
+  position: POSITION.BOTTOM_LEFT,
+  timeout: 1800
+})
 
 app.mount('#app')

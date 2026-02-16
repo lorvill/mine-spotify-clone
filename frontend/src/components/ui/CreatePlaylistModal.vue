@@ -2,19 +2,23 @@
 import { computed, ref } from 'vue'
 import FileImageInput from '@/components/ui/FileImageInput.vue'
 import { useCreatePlaylist } from '@/composables/usePlaylistCreation.ts'
-const open = ref(false)
+import { useToast } from 'vue-toastification'
 
+const open = ref(false)
 const closeModal = () => {
   cleanup()
   open.value = false
 }
 
-const openModal = () => { open.value = true }
+const openModal = () => {
+  open.value = true
+}
 const { create } = useCreatePlaylist()
 const playlistId = ref()
 const playlistDescription = ref('')
 const playlistTitle = ref('')
 const imageFile = ref<File | null>(null)
+const toast = useToast()
 
 const disabledBtn = computed(() => {
   return !playlistTitle.value
@@ -36,9 +40,12 @@ function createPlaylist() {
     description: playlistDescription.value,
   }
   create(playlist, {
-    onSuccess: () => closeModal(),
+    onSuccess: () => {
+      closeModal()
+      toast.success('Playlist created!')
+    },
     onError: (error) => {
-      console.error('Error creating playlist:', error)
+      toast.error('Oops, something went wrong!')
     },
   })
 }
@@ -54,15 +61,15 @@ defineExpose({ openModal })
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer"
         @click.self="outOfModal"
       >
-        <div class="bg-neutral-900 text-white rounded-2xl shadow-2xl w-[650px] h-[300px] flex overflow-hidden animate-fadeIn">
+        <div
+          class="bg-neutral-900 text-white rounded-2xl shadow-2xl w-[650px] h-[300px] flex overflow-hidden animate-fadeIn"
+        >
           <div class="w-[45%] bg-gradient-to-b flex items-center justify-center">
-
             <file-image-input v-model="imageFile">
               <template #default="{ imageUrl }">
-                <img v-if="imageUrl" :src="imageUrl" alt="cover"/>
+                <img v-if="imageUrl" :src="imageUrl" alt="cover" />
               </template>
             </file-image-input>
-
           </div>
           <div class="w-[55%] p-6 flex flex-col justify-between">
             <h2 class="text-2xl font-bold mb-3">Create a playlist</h2>

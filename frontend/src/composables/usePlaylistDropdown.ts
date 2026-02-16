@@ -4,6 +4,12 @@ import type { Option } from '@/types/option.ts'
 import type { DropdownPlaylist } from '@/types/dropdownActions.ts'
 import type { Playlist } from '@/types/playlist.ts'
 import { playlistKeys } from '@/utils/queryKeysFactory.ts'
+import { ref } from 'vue'
+import { useToast } from 'vue-toastification'
+
+const isConfirmationModalOpened = ref(false)
+const selectedPlaylist = ref<Playlist | null>(null)
+const toast = useToast()
 
 export function usePlaylistDropdown(){
   const { deletePlaylist } = apiPlaylists
@@ -17,7 +23,12 @@ export function usePlaylistDropdown(){
         exact: true
       }) // exact:true говорит о том что нужно обновить только по ключу "['playlists']"
       queryClient.removeQueries({ queryKey: playlistKeys.currentPlaylist(deletedId)}) // удаляем данные удаленного плейлиста из кэша
+      isConfirmationModalOpened.value = false
+      toast.success('Playlist deleted successfully.')
     },
+    onError: () => {
+      toast.error('Error while deleting playlist')
+    }
   })
 
   const playlistOptions: Option<DropdownPlaylist>[] = [
@@ -27,18 +38,31 @@ export function usePlaylistDropdown(){
   ]
 
   const handlePlaylistAction = (option: DropdownPlaylist, playlist: Playlist) => {
-    const actions: Record<DropdownPlaylist, () => void> = {
-      delete: () => deletePlaylistMutation.mutate(String(playlist.id)),
-      edit: () => console.log('edit'),
-      share: () => console.log('share'),
-    }
+    if (option === 'delete') {
+      selectedPlaylist.value = playlist
+      isConfirmationModalOpened.value = true
+    } else {
+      const actions: Record<Exclude<DropdownPlaylist, 'delete'>,  () => void> = {
+        edit: () => console.log('edit'),
+        share: () => console.log('share'),
+      }
 
-    actions[option]()
+      actions[option]()
+    }
+  }
+
+  const confirmDelete = () => {
+    if (selectedPlaylist.value) {
+      deletePlaylistMutation.mutate(String(selectedPlaylist.value.id))
+    }
   }
 
   return {
-    deletePlaylistMutation: deletePlaylistMutation.mutateAsync,
+    deletePlaylistMutation: deletePlaylistMutation.isPending,
     playlistOptions,
     handlePlaylistAction,
+    confirmDelete,
+    isConfirmationModalOpened,
+    selectedPlaylist,
   }
 }
