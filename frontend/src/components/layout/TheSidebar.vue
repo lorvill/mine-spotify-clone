@@ -2,20 +2,19 @@
 import { RouterLink } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
 import { useTemplateRef } from 'vue'
-import TheDropDown from '@/components/ui/dropdowns/TheDropDown.vue'
-import { usePlaylistDropdown } from '@/composables/usePlaylistDropdown.ts'
 import { useAlbumsQuery } from '@/queries/useAlbumsQuery.ts'
 import { useAllPlaylistsQuery } from '@/queries/useAllPlaylistsQuery.ts'
 import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal.vue'
+import PlaylistDropdown from '@/components/ui/dropdowns/PlaylistDropdown.vue'
+import EditPlaylistModal from '@/components/ui/EditPlaylistModal.vue'
 
 const modalWindow = useTemplateRef('modalWindow')
 const { status, data } = useAllPlaylistsQuery()
-const { handlePlaylistAction, playlistOptions } = usePlaylistDropdown()
 const { data: albums } = useAlbumsQuery()
 </script>
 
 <template>
-  <div class="h-[100%] p-5 w-[300px] fixed bg-black">
+  <div class="p-5 pr-2 w-[350px] bg-black flex flex-col border-r border-white/5">
     <div class="flex items-center justify-between">
       <router-link :to="{ name: 'browse' }">
         <img width="110" src="/images/icons/spotify-logo.png" />
@@ -33,58 +32,68 @@ const { data: albums } = useAlbumsQuery()
     <div class="mt-10 pl-2 flex items-center justify-between">
       <router-link :to="{ name: 'library' }" class="flex items-center gap-1.5" title="Library">
         <img width="20" class="link-img" src="/images/icons/music-album.png" />
-        <span class="font-bold text-[15px]">Your Library</span>
+        <span class="font-bold text-[15px] text-white">Your Library</span>
       </router-link>
 
-      <button class="create rounded-full font-bold text-white" @click="modalWindow?.openModal()">
-        <img width="14" src="/images/icons/plus.png" class="invert-100" />
+      <button
+        class="create rounded-full font-bold text-white text-[13px]"
+        @click="modalWindow?.openModal()"
+      >
+        <img width="14" src="/images/icons/plus.png" class="invert" />
         <span>Create</span>
         <CreatePlaylistModal ref="modalWindow" />
       </button>
     </div>
 
-    <ul class="mt-7">
-      <router-link :to="{ name: 'liked-songs' }" class="sidebar-item mb-2">
-        <img width="40" src="/images/icons/liked-inactive.png" />
-        <div class="flex-col flex">
-          <span class="text-[15px]">Liked Songs</span>
-          <span class="text-[12px]">Playlist</span>
-        </div>
-      </router-link>
-    </ul>
-
-    <div v-if="status === 'error'" class="text-white-600"></div>
-    <ul v-else-if="status === 'success'">
-      <li
-        v-for="playlist in data"
-        :key="playlist.id"
-        class="flex justify-between items-center sidebar-item cursor-pointer"
-      >
+    <div class="flex-1 overflow-y-auto mt-10 custom-scrollbar">
+      <ul>
         <router-link
-          :to="{ name: 'playlist', params: { id: playlist.id } }"
-          class="flex items-center gap-3"
+          :to="{ name: 'liked-songs' }"
+          class="sidebar-item"
+          active-class="bg-[#CDC5C2]/20"
         >
-          <img src="/images/icons/playlist-inactive.png" width="40" />
+          <img width="40" src="/images/icons/liked-inactive.png" />
           <div class="flex-col flex">
-            <span class="text-[15px]">{{ playlist.title }}</span>
-            <span class="text-[12px]">{{ playlist.description }}</span>
+            <span class="text-[15px]">Liked Songs</span>
+            <span class="text-[12px] text-neutral-400">Playlist</span>
           </div>
         </router-link>
-        <the-drop-down
-          :options="playlistOptions"
-          @select="(option) => handlePlaylistAction(option, playlist)"
-        />
-      </li>
-      <li v-for="album in albums" :key="album.id" class="flex sidebar-item cursor-pointer mb-2">
-        <img src="/images/icons/playlist-inactive.png" width="40" />
-        <div class="flex-col flex">
-          <span class="text-[15px]">{{ album.title }}</span>
-          <span class="text-[12px]">{{ album.subtitle }}</span>
-        </div>
-      </li>
-    </ul>
+      </ul>
 
-    <delete-confirmation-modal />
+      <div v-if="status === 'error'" class="text-white-500 p-4">Try again</div>
+      <ul v-else-if="status === 'success'">
+        <li
+          v-for="playlist in data"
+          :key="playlist.id"
+          class="flex justify-between items-center cursor-pointer mb-1 mt-2 sidebar-item active:bg-[#CDC5C2]/20"
+        >
+          <router-link
+            :to="{ name: 'playlist', params: { id: playlist.id } }"
+            class="flex items-center gap-3 overflow-hidden w-full">
+<!--            active-class="bg-[#CDC5C2]/20"-->
+            <img src="/images/icons/playlist-inactive.png" width="40" class="flex-shrink-0" />
+
+            <div class="flex-col flex overflow-hidden">
+              <span class="text-[15px] truncate">{{ playlist.title }}</span>
+              <span class="text-[12px] text-neutral-400 truncate">{{ playlist.description }}</span>
+            </div>
+          </router-link>
+
+          <div class="ml-auto flex items-center">
+            <playlist-dropdown :playlist="playlist" />
+          </div>
+        </li>
+
+        <li v-for="album in albums" :key="album.id" class="flex sidebar-item cursor-pointer mb-2">
+          <img src="/images/icons/playlist-inactive.png" width="40" />
+
+          <div class="flex-col flex">
+            <span class="text-[15px]">{{ album.title }}</span>
+            <span class="text-[12px]">{{ album.subtitle }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -107,10 +116,6 @@ const { data: albums } = useAlbumsQuery()
 .sidebar-item:hover {
   background-color: rgba(205, 197, 194, 0.2);
   color: #ffffff;
-}
-
-.sidebar-item.active {
-  background-color: rgba(205, 197, 194, 0.2);
 }
 
 .create {
@@ -136,5 +141,24 @@ const { data: albums } = useAlbumsQuery()
 
 .active .link-img {
   filter: invert(1) brightness(1.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 </style>

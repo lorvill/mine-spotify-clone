@@ -12,15 +12,16 @@ const trackStore = useTrackStore()
 const imageFile = ref<File | null>(null)
 const playlistId = route.params.id
 
-const { data, error, isLoading } = usePlaylistQuery(playlistId as string)
+const { data, error, isLoading } = usePlaylistQuery(playlistId)
 const playlistTitle = computed(() => {
   return data.value?.title
 })
 </script>
 
 <template>
-  <div class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col">
+  <div class="min-h-full flex flex-col">
     <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#737373]/90 to-[#4a4a4a]/70">
+
       <div class="flex items-end gap-6 mb-0">
         <file-image-input v-model="imageFile" />
         <div class="flex flex-col gap-4">
@@ -30,7 +31,7 @@ const playlistTitle = computed(() => {
       </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-8 pt-0 bg-gradient-to-b from-[#303030]/80 to-[#1c1c1c]/10">
+    <div class="flex-1 p-8 pt-0 bg-gradient-to-b from-[#303030]/80 to-[#1c1c1c]/10">
       <div class="p-5 pl-0 flex items-center gap-4">
         <button
           class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center hover:scale-105 transition-transform duration-200 shadow-md cursor-pointer"

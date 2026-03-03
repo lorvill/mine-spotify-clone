@@ -14,11 +14,10 @@ const hoverIndex = ref<number | null>(null)
 </script>
 
 <template>
-  <div class="w-[calc(100%-300px)] fixed right-0 h-screen bg-neutral-900">
     <div v-if="isAlbumLoading" class="text-gray-400 text-center mt-20">Loading...</div>
     <div v-else-if="albumError" class="text-red-500 text-center mt-20">Failed to load data</div>
 
-    <div v-else-if="album" class="p-8 flex-col overflow-auto max-h-[calc(100vh-60px)]">
+    <div v-else-if="album" class="p-8 flex-col">
       <div class="flex items-center gap-6 mb-0">
         <img :src="album.albumCover" alt="cover" class="w-40 h-40 rounded-md shadow-lg" />
         <div class="flex-col">
@@ -102,7 +101,6 @@ const hoverIndex = ref<number | null>(null)
         <ThePlayer />
       </div>
     </transition>
-  </div>
 </template>
 
 <style scoped>

@@ -96,7 +96,7 @@ const categories: Category[] = [
 </script>
 
 <template>
-  <section class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col px-11">
+  <section class="flex flex-col px-11">
     <div class="flex-1 overflow-y-auto pt-6 pb-10 space-y-6">
       <h2 class="text-2xl font-bold ml-1 mb-6">Browse all</h2>
 

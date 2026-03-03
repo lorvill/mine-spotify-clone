@@ -32,5 +32,9 @@ export const playlistService = {
     if (playlist.userId !== userId) throw new UnauthorizedError('Access denied')
 
     return prisma.playlist.delete({ where: { id }})
+  },
+
+  async editPlaylist(id: number, data: Prisma.PlaylistUpdateInput) {
+    return prisma.playlist.update({ where: { id }, data })
   }
 }

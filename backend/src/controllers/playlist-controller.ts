@@ -31,5 +31,12 @@ export const playlistController = {
     const userId = req.userId
     const deletePlaylist = await playlistService.deletePlaylist(id, userId!)
     return res.json(deletePlaylist)
+  },
+
+  async editPlaylist(req: Request, res: Response) {
+    const { id } = idParams.parse(req.params)
+    const data = req.body
+    const editPlaylist = await playlistService.editPlaylist(id, data)
+    return res.json(editPlaylist)
   }
 }

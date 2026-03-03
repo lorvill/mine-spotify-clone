@@ -14,7 +14,7 @@ console.log(likedTracksQuery.data.value)
 </script>
 
 <template>
-  <div class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col">
+  <div class="h-screen flex flex-col">
 
     <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#6143b5]/90 to-[#3f2b78]/70">
       <div class="flex items-end gap-6 mb-0">
