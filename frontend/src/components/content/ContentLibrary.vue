@@ -31,7 +31,6 @@ const cards = computed(() => {
 </script>
 
 <template>
-  <div class="w-[calc(100%-300px)] fixed right-0 h-screen flex flex-col">
     <section class="flex-1 overflow-y-auto px-6 pt-6 pb-10 space-y-6">
       <div class="flex gap-3">
         <Button
@@ -48,5 +47,4 @@ const cards = computed(() => {
       <div v-else-if="albumsError || podcastsError" class="text-white">Failed to load data</div>
       <LibraryCardList v-else title="Albums" :items="cards" />
     </section>
-  </div>
 </template>

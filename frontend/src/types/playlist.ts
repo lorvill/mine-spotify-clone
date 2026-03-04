@@ -1,5 +1,5 @@
-export type Playlist = {
+export interface Playlist {
   id: string,
   title: string,
-  description: string
+  description?: string
 }
