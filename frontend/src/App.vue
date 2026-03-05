@@ -14,7 +14,7 @@ import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
       <main class="flex-1 overflow-y-auto custom-scrollbar">
         <router-view v-slot="{ Component, route }">
           <transition name="fade" mode="out-in">
-            <component :is="Component" :key="route.params.id" />
+            <component :is="Component" :key="route.fullPath" />
           </transition>
         </router-view>
       </main>

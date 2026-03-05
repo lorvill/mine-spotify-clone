@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { ref } from 'vue'
 import FileImageInput from '@/components/ui/FileImageInput.vue'
 import type { Playlist } from '@/types/playlist.ts'
 import { usePlaylistQuery } from '@/queries/usePlaylistQuery.ts'
-import { useRoute } from 'vue-router'
 import { whenever } from '@vueuse/core'
 
 const props = defineProps<{ isRevealed: boolean; selectedPlaylist: Playlist | null }>()
 
-const route = useRoute()
 const { data, isLoading, isError } = usePlaylistQuery(() => props.selectedPlaylist?.id)
 
 const playlistDescription = ref<string | undefined>('')
@@ -16,13 +14,6 @@ const playlistTitle = ref<string | undefined>('')
 const imageFile = ref<File | null>(null)
 
 const emit = defineEmits(['confirm', 'cancel'])
-
-watch(
-  () => route.params.id,
-  () => {
-    console.log(route.params.id)
-  },
-)
 
 whenever(
   data,
