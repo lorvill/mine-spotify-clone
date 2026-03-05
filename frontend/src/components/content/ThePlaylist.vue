@@ -10,9 +10,9 @@ import FileImageInput from '@/components/ui/FileImageInput.vue'
 const route = useRoute()
 const trackStore = useTrackStore()
 const imageFile = ref<File | null>(null)
-const playlistId = route.params.id
+const playlistId = computed(() => route.params.id)
 
-const { data, error, isLoading } = usePlaylistQuery(playlistId)
+const { data, error, isLoading } = usePlaylistQuery(playlistId.value as string)
 const playlistTitle = computed(() => {
   return data.value?.title
 })
@@ -21,7 +21,6 @@ const playlistTitle = computed(() => {
 <template>
   <div class="min-h-full flex flex-col">
     <div class="p-8 flex-col flex-shrink-0 bg-gradient-to-b from-[#737373]/90 to-[#4a4a4a]/70">
-
       <div class="flex items-end gap-6 mb-0">
         <file-image-input v-model="imageFile" />
         <div class="flex flex-col gap-4">
