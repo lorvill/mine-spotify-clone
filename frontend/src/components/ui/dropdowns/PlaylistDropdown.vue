@@ -8,22 +8,12 @@ import { ref } from 'vue'
 import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal.vue'
 import EditPlaylistModal from '@/components/ui/EditPlaylistModal.vue'
 
-defineProps<{ playlist: Playlist }>()
+const props = defineProps<{ playlist: Playlist }>()
 
-const {
-  isRevealed: isDeleteOpen,
-  reveal: revealDelete,
-  confirm: confirmDelete,
-  cancel: cancelDelete,
-  onReveal,
-} = useConfirmDialog()
+const { onReveal } = useConfirmDialog()
 
-const {
-  isRevealed: isEditOpen,
-  reveal: revealEdit,
-  confirm: confirmEdit,
-  cancel: cancelEdit,
-} = useConfirmDialog()
+const deleteModal = useConfirmDialog()
+const editModal = useConfirmDialog()
 
 const { deletePlaylistMutation, editPlaylistMutation } = usePlaylistDropdown()
 const isOpened = ref(false)
@@ -36,7 +26,7 @@ onReveal((data) => {
 async function openDeleteConfirm(playlist: Playlist) {
   isOpened.value = false
 
-  const { data: isConfirmed } = await revealDelete(playlist)
+  const { data: isConfirmed } = await deleteModal.reveal(playlist)
   if (isConfirmed) {
     deletePlaylistMutation.mutate(playlist.id as string)
   }
@@ -48,7 +38,7 @@ async function openEditModal(playlist: Playlist) {
   isOpened.value = false
   selectedPlaylist.value = playlist
 
-  const { data } = await revealEdit()
+  const { data } = await editModal.reveal()
   if (data) {
     editPlaylistMutation.mutate(data)
   }
@@ -65,15 +55,15 @@ async function openEditModal(playlist: Playlist) {
 
   <delete-confirmation-modal
     :selected-playlist="selectedPlaylist"
-    :is-revealed="isDeleteOpen"
-    @confirm="confirmDelete(true)"
-    @cancel="cancelDelete"
+    :is-revealed="deleteModal.isRevealed.value"
+    @confirm="deleteModal.confirm(true)"
+    @cancel="deleteModal.cancel"
   />
 
   <edit-playlist-modal
     :selected-playlist="selectedPlaylist"
-    :is-revealed="isEditOpen"
-    @confirm="(data) => confirmEdit(data)"
-    @cancel="cancelEdit"
+    :is-revealed="editModal.isRevealed.value"
+    @confirm="(data) => editModal.confirm(data)"
+    @cancel="editModal.cancel"
   />
 </template>

@@ -5,6 +5,6 @@ export const idParams= zod.object({
 })
 
 export const bodyReq= zod.object({
-  title: zod.string().min(1).max(15).regex(/^[^@<>/"'&]+$/),
+  title: zod.string().min(1).max(30).regex(/^[^@<>/"'&]+$/),
   description: zod.string().max(50).regex(/^[^@<>/"'&]+$/).optional(),
 })

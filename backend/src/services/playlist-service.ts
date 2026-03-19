@@ -1,6 +1,6 @@
 import { prisma } from '../prisma-client.js'
 import { NotFoundError, UnauthorizedError } from '../errors/custom-errors.js'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '../generated/prisma/client.js'
 
 export const playlistService = {
   async create(data: Prisma.PlaylistCreateInput) {
@@ -14,7 +14,7 @@ export const playlistService = {
       where: { id },
       include: { user: { select: { username: true }}}
     })
-    if (!playlist) throw new NotFoundError(`Playlist with id ${id} not found`)
+    if (!playlist) throw new NotFoundError(`Playlist with id ${id} is not found`)
     return playlist
   },
 

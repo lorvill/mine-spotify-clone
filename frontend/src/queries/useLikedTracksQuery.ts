@@ -1,17 +1,13 @@
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 import type { Track } from '@/types/track.ts'
+import { useLikedTracks } from '@/composables/useLikedTracks.ts'
+import { apiLikedTracks } from '@/api/track.ts'
 
 export function useLikedTracksQuery() {
+  const { getAllTracks }= apiLikedTracks
   return useQuery({
     queryKey: ['tracks'],
-    queryFn: fetchLikedTracks,
+    queryFn: getAllTracks,
     placeholderData: keepPreviousData,
   })
-}
-
-async function fetchLikedTracks(): Promise<Track[]> {
-  const url = 'https://64e9970736435f75.mokky.dev/liked-tracks'
-  const res = await fetch(url)
-  if (!res.ok) throw new Error('Failed to get liked tracks')
-  return res.json()
 }

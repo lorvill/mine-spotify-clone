@@ -7,6 +7,7 @@ export const apiPlaylists = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(playlist),
     })
 
@@ -17,6 +18,7 @@ export const apiPlaylists = {
   async deletePlaylist(id: string): Promise<Playlist> {
     const response = await fetch(`/api/playlists/${id}`, {
       method: 'DELETE',
+      credentials: 'include',
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return response.json()
@@ -29,6 +31,7 @@ export const apiPlaylists = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(rest)
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)

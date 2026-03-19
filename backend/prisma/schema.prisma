@@ -142,5 +142,6 @@ model SavedAlbum {
   user  User  @relation(fields: [userId], references: [id])
   album Album @relation(fields: [albumId], references: [id])
 
+  @@unique([albumId, userId])
   @@map("saved_albums")
 }

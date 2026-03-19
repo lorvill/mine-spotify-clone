@@ -37,8 +37,8 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/liked-songs',
-      name: 'liked-songs',
+      path: '/liked-tracks',
+      name: 'liked-tracks',
       component: LikedTracksView,
       meta: { requiresAuth: true },
     },

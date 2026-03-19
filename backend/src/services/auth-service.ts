@@ -20,6 +20,7 @@ export const authService = {
         email,
         password: hashedPassword,
         username,
+        albums: { create: {albumId: 1} }
       }
     })
 

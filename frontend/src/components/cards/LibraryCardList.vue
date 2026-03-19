@@ -4,8 +4,7 @@ import TheCard from '@/components/cards/TheCard.vue'
 interface Card {
   id: string | number
   title: string
-  subtitle: string
-  image: string
+  cover: string
 }
 const props = defineProps<{
   title: string
@@ -31,8 +30,7 @@ const props = defineProps<{
       >
         <TheCard
           :title="item.title"
-          :subtitle="item.subtitle"
-          :image="item.image"
+          :cover="item.cover"
         />
       </router-link>
     </div>
