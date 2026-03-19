@@ -4,9 +4,9 @@ import { computed } from 'vue'
 import { secondsToMinutes } from '@/utils/secondsToMinutes.ts'
 
 const store = useTrackStore()
-const currentTrackName = computed(() => store.activeTrack?.name)
-const currentAlbumName = computed(() => store.activeAlbum?.name)
-const currentCover = computed(() => store.activeAlbum?.albumCover)
+const currentTrackName = computed(() => store.activeTrack?.title)
+const currentAlbumName = computed(() => store.activeAlbum?.title)
+const currentCover = computed(() => store.activeAlbum?.cover)
 
 import { watch } from 'vue'
 

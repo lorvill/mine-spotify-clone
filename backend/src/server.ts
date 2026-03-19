@@ -7,6 +7,9 @@ import { createClient } from 'redis'
 import { RedisStore } from 'connect-redis'
 import logger from './logger.js'
 import { errorHandler } from './middleware/error-handler.js'
+import likedTracksRoutes from './routes/liked-tracks-routes.js'
+import libraryRoutes from './routes/library-routes.js'
+import albumRoutes from './routes/album-routes.js'
 
 const app = express();
 const PORT = process.env.PORT || 5003;
@@ -27,7 +30,7 @@ client.on('ready', () => logger.info('Redis ready'))
 
 try {
   await client.connect()
-  await client.set('test', 'hello')
+  // await client.set('test', 'hello')
 } catch (err) {
   logger.error({ err }, 'Redis connection failed:')
 }
@@ -49,6 +52,9 @@ app.use(session({
 
 app.use('/api/auth', authRoutes)
 app.use('/api/playlists', playlistRoutes)
+app.use('/api/liked-tracks', likedTracksRoutes)
+app.use('/api/library', libraryRoutes)
+app.use('/api/library/album', albumRoutes)
 
 app.use(errorHandler)
 

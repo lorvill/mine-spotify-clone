@@ -29,3 +29,9 @@ export class NotFoundError extends AppError {
     super(message, { ...options, statusCode: 404 })
   }
 }
+
+export class ConflictError extends AppError {
+  constructor(message = "Conflict", options: ErrorOptions = {}) {
+    super(message, { ...options, statusCode: 409 })
+  }
+}

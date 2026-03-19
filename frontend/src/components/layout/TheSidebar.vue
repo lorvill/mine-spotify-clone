@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import CreatePlaylistModal from '@/components/ui/CreatePlaylistModal.vue'
-import { useTemplateRef } from 'vue'
-import { useAlbumsQuery } from '@/queries/useAlbumsQuery.ts'
+import { computed, useTemplateRef } from 'vue'
 import { useAllPlaylistsQuery } from '@/queries/useAllPlaylistsQuery.ts'
-import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal.vue'
 import PlaylistDropdown from '@/components/ui/dropdowns/PlaylistDropdown.vue'
-import EditPlaylistModal from '@/components/ui/EditPlaylistModal.vue'
+import { useLibraryQuery } from '@/queries/useLibraryQuery.ts'
 
 const modalWindow = useTemplateRef('modalWindow')
 const { status, data } = useAllPlaylistsQuery()
-const { data: albums } = useAlbumsQuery()
+const { data: albums } = useLibraryQuery()
+console.log(albums)
 </script>
 
 <template>
@@ -48,7 +47,7 @@ const { data: albums } = useAlbumsQuery()
     <div class="flex-1 overflow-y-auto mt-10 custom-scrollbar">
       <ul>
         <router-link
-          :to="{ name: 'liked-songs' }"
+          :to="{ name: 'liked-tracks' }"
           class="sidebar-item"
           active-class="bg-[#CDC5C2]/20"
         >
@@ -69,8 +68,9 @@ const { data: albums } = useAlbumsQuery()
         >
           <router-link
             :to="{ name: 'playlist', params: { id: playlist.id } }"
-            class="flex items-center gap-3 overflow-hidden w-full">
-<!--            active-class="bg-[#CDC5C2]/20"-->
+            class="flex items-center gap-3 overflow-hidden w-full"
+          >
+            <!--            active-class="bg-[#CDC5C2]/20"-->
             <img src="/images/icons/playlist-inactive.png" width="40" class="flex-shrink-0" />
 
             <div class="flex-col flex overflow-hidden">
@@ -84,13 +84,22 @@ const { data: albums } = useAlbumsQuery()
           </div>
         </li>
 
-        <li v-for="album in albums" :key="album.id" class="flex sidebar-item cursor-pointer mb-2">
-          <img src="/images/icons/playlist-inactive.png" width="40" />
+        <li
+          v-for="album in albums?.albums"
+          :key="album.id"
+          class="flex sidebar-item cursor-pointer mb-2"
+        >
+          <router-link
+            :to="{ name: 'album', params: { id: album.id } }"
+            class="flex items-center gap-3 overflow-hidden w-full"
+          >
+          <img :src="album.cover" width="40" />
 
           <div class="flex-col flex">
             <span class="text-[15px]">{{ album.title }}</span>
-            <span class="text-[12px]">{{ album.subtitle }}</span>
+            <span class="text-[12px] text-neutral-400 truncate">{{ album.artist.name }}</span>
           </div>
+          </router-link>
         </li>
       </ul>
     </div>

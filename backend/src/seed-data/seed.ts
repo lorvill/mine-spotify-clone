@@ -1,41 +1,89 @@
 import { prisma } from '../prisma-client.js'
-import podcasts from './podcasts.json' with { type: 'json' }
-import radioStations from './radioStations.json' with { type: 'json' }
-import newReleases from './newReleases.json' with { type: 'json' }
+import 'dotenv/config'
+
+const ARTIST_NAME = 'Diaries Of A Hero'
+const ALBUM_TITLE = 'Diaries Of A Hero'
+
+const tracks = [
+  { number: 1,  title: 'Intro',              duration: 62,  file: 'Intro.mp3' },
+  { number: 2,  title: 'Solitude',           duration: 238, file: 'Solitude.mp3' },
+  { number: 3,  title: 'Manimal',            duration: 239, file: 'Manimal.mp3' },
+  { number: 4,  title: 'J5',                 duration: 223, file: 'J5.mp3' },
+  { number: 5,  title: 'Throne',             duration: 320, file: 'Throne.mp3' },
+  { number: 6,  title: 'Scarwhores',         duration: 218, file: 'Scarwhores.mp3' },
+  { number: 7,  title: 'Highschool Funeral', duration: 247, file: 'Highschool Funeral.mp3' },
+  { number: 8,  title: 'Get Away',           duration: 192, file: 'Get Away.mp3' },
+  { number: 9,  title: 'Victims of Chaos',   duration: 238, file: 'Victims of Chaos.mp3' },
+  { number: 10, title: 'Neruda',             duration: 225, file: 'Neruda.mp3' },
+]
 
 async function main() {
-  for (const podcast of podcasts) {
-    await prisma.podcast.upsert({
-      where: { title: podcast.title },
-      create: podcast,
-      update: podcast
-    })
-  }
-  console.log(`Seeded ${podcasts.length} podcasts`)
+  await prisma.track.deleteMany({})
+  const user = await prisma.user.upsert({
+    where: { email: 'artist@example.com' },
+    create: {
+      email: 'artist@example.com',
+      password: 'placeholder',
+      username: ARTIST_NAME,
+    },
+    update: {},
+  })
 
-  for (const station of radioStations) {
-    await prisma.radioStation.upsert({
-      where: { title: station.title },
-      create: station,
-      update: station
-    })
-  }
-  console.log(`Seeded ${radioStations.length} radio stations`)
+  const artist = await prisma.artist.upsert({
+    where: { userId: user.id },
+    create: { name: ARTIST_NAME, userId: user.id },
+    update: { name: ARTIST_NAME },
+  })
 
-  for (const release of newReleases) {
-    await prisma.newRelease.upsert({
-      where: { title: release.title },
-      create: release,
-      update: release
+  let album = await prisma.album.findFirst({
+    where: { title: ALBUM_TITLE, artistId: artist.id }
+  })
+
+  if (!album) {
+    album = await prisma.album.create({
+      data: {
+        title: ALBUM_TITLE,
+        cover: '/covers/DiariesOfAHero.png',
+        artistId: artist.id
+      }
     })
   }
-  console.log(`Seeded ${newReleases.length} radio stations`)
+
+  for (const track of tracks) {
+    await prisma.track.upsert({
+      where: { audioPath: `/tracks/${encodeURIComponent(track.file)}` },
+      create: {
+        number:    track.number,
+        title:     track.title,
+        duration:  track.duration,
+        audioPath: `/tracks/${encodeURIComponent(track.file)}`,
+        coverPath: '/covers/DiariesOfAHero.png',
+        albumId:   album.id,
+      },
+      update: {
+        title: track.title,
+        number: track.number
+      },
+    })
+  }
+
+  const allUsers = await prisma.user.findMany({
+    where: { id: { not: user.id } }
+  })
+
+  for (const user of allUsers) {
+    await prisma.savedAlbum.upsert({
+      where: { albumId_userId: { albumId: album.id, userId: user.id, } },
+      create: { albumId: album.id, userId: user.id,  },
+      update: {}
+    })
+  }
+
+  console.log('Done')
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
+  .then(() => prisma.$disconnect())
   .catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()

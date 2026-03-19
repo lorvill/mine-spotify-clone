@@ -89,8 +89,8 @@ defineExpose({ openModal })
 
               <div class="flex items-center justify-between">
                 <label class="flex items-center gap-2 cursor-pointer text-sm">
-                  <Field name="rememberMe" type="checkbox" class="checkbox" />
-                  <span>Remember me</span>
+                  <Field name="rememberMe" type="checkbox" :value="true" :unchecked-value="false" class="checkbox" />
+                  <span >Remember me</span>
                 </label>
 
                 <span class="text-sm text-gray-400 hover:text-white cursor-pointer">

@@ -11,7 +11,7 @@ export function useSelectAlbumQuery(id: MaybeRefOrGetter<string>) {
 }
 
 async function selectedAlbum(id: MaybeRefOrGetter<string>): Promise<Album> {
-  const url = `https://64e9970736435f75.mokky.dev/album/${id}`
+  const url = `/api/library/album/${id}`
   const res = await fetch(url)
   if (!res.ok) throw new Error('Failed to load data')
   return res.json()

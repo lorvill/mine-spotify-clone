@@ -10,9 +10,9 @@ import FileImageInput from '@/components/ui/FileImageInput.vue'
 const route = useRoute()
 const trackStore = useTrackStore()
 const imageFile = ref<File | null>(null)
-const playlistId = computed(() => route.params.id)
+const playlistId = computed(() => route.params.id as string)
 
-const { data, error, isLoading } = usePlaylistQuery(playlistId.value as string)
+const { data, error, isLoading } = usePlaylistQuery(playlistId)
 const playlistTitle = computed(() => {
   return data.value?.title
 })
